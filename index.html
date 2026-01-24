@@ -158,12 +158,15 @@
       color:#fff;border-color:transparent
     }
     button.small{padding:8px 10px;border-radius:999px;font-size:13px;font-weight:950}
+    button:hover{filter:brightness(.99)}
     button:disabled{
       opacity:.55; cursor:not-allowed;
       filter:saturate(.6);
       transform:none;
       box-shadow:none;
     }
+
+    /* WOW button glow */
     .wowReady{
       box-shadow: 0 16px 35px rgba(16,185,129,.25);
       transform: translateY(-1px);
@@ -295,6 +298,23 @@
     .certHd h3{margin:0;font-size:14px}
     .certActions{padding:14px; display:flex; gap:10px; flex-wrap:wrap}
 
+    /* reveal animation */
+    .revealAnim{
+      animation: revealIn .55s cubic-bezier(.2,.9,.2,1) both;
+    }
+    @keyframes revealIn{
+      from{ opacity:0; transform: translateY(10px); filter: blur(2px); }
+      to{ opacity:1; transform: translateY(0); filter: blur(0); }
+    }
+    .revealGlow{
+      animation: glowOnce .75s ease-out both;
+    }
+    @keyframes glowOnce{
+      0%{ box-shadow: 0 0 0 rgba(16,185,129,0); }
+      45%{ box-shadow: 0 22px 60px rgba(16,185,129,.22); }
+      100%{ box-shadow: 0 10px 24px rgba(17,24,39,.06); }
+    }
+
     @media print{
       .hero, .cta, .charts, #share, #copy, #downloadPdf, .heroLinks, #calcBtn, #calcHint { display:none !important; }
       body{ background:#fff; }
@@ -347,18 +367,18 @@
       <section class="card">
         <div class="hd">
           <h2>Scenario (su misura)</h2>
-          <div class="hint">Compila e poi premi “Calcola risultati”.</div>
+          <div class="hint">Compila i consumi. Nome cliente/ABO Partner sono opzionali (solo per PDF).</div>
         </div>
         <div class="bd">
 
           <div class="field">
-            <label for="clientName">Nome cliente (per PDF)</label>
-            <input id="clientName" type="text" placeholder="Es. Mario Rossi" autocomplete="name" />
+            <label for="clientName">Nome cliente (opzionale)</label>
+            <input id="clientName" type="text" placeholder="Nome cliente" autocomplete="name" />
           </div>
 
           <div class="field">
-            <label for="consultantName">Referente consulenza (per PDF)</label>
-            <input id="consultantName" type="text" placeholder="Es. Team Longobardi" />
+            <label for="consultantName">Nome ABO Partner (opzionale)</label>
+            <input id="consultantName" type="text" placeholder="Nome ABO Partner" />
           </div>
 
           <div class="divider"></div>
@@ -394,14 +414,14 @@
           <div class="rangeMeta"><span>0</span><span>12</span></div>
 
           <div class="cta">
-            <button class="primary" id="calcBtn" disabled>Calcola risultati</button>
+            <button class="primary" id="calcBtn">Calcola risultati</button>
             <button class="primary" id="downloadPdf" disabled>Genera PDF cliente</button>
             <button id="share" disabled>Condividi (WhatsApp)</button>
             <button id="copy" disabled>Copia riepilogo</button>
           </div>
 
           <div class="hint" id="calcHint" style="margin-top:10px;">
-            Inserisci Nome cliente e Referente per attivare il “reveal”.
+            Premi “Calcola risultati” per mostrare i risultati.
           </div>
 
           <div class="callout">
@@ -710,25 +730,14 @@
     els.h5.classList.toggle('active', h===5);
     els.h10.classList.toggle('active', h===10);
     const d = calc(false);
-    if (d) renderHero(d);
+    if (d && resultsWrap.style.display === "block") renderHero(d);
   }
 
-  function canReveal(){
-    const cn = (els.clientName.value || '').trim();
-    const rn = (els.consultantName.value || '').trim();
-    return cn.length >= 2 && rn.length >= 2;
-  }
-
+  // Campi opzionali: reveal sempre consentito
   function updateRevealButton(){
-    const ok = canReveal();
-    calcBtn.disabled = !ok;
-    if (ok){
-      calcHint.textContent = "Pronto: premi “Calcola risultati”.";
-      calcBtn.classList.add('wowReady');
-    } else {
-      calcHint.textContent = "Inserisci Nome cliente e Referente per attivare il “reveal”.";
-      calcBtn.classList.remove('wowReady');
-    }
+    calcBtn.disabled = false;
+    calcHint.textContent = "Premi “Calcola risultati” per mostrare i risultati.";
+    calcBtn.classList.add('wowReady');
   }
 
   function calc(updateCharts = true){
@@ -769,7 +778,6 @@
     // UI risultati (se visibili)
     els.breakeven.textContent = beText(beM);
     els.savePerLiter.textContent = `${fmtEUR(diffPerLiter)} /L (${percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`;
-    setSign(els.breakeven, (beM===null? -1 : (24 - beM))); // solo per colore “ok/ko”
     setSign(els.savePerLiter, diffPerLiter);
 
     els.bottlesSavedYearBig.textContent = fmtNum(bottlesSavedYear);
@@ -815,24 +823,21 @@
   function renderHero(d){
     const v = (selectedHorizon === 5) ? d.save5 : d.save10;
     els.saveHeroValue.textContent = moneySigned(v);
-
-    const be = beText(d.beM);
-    const sub = `Orizzonte selezionato: ${selectedHorizon} anni • Break-even: ${be} • Bottigliette/anno: ${fmtNum(d.bottlesSavedYear)}`;
-    els.saveHeroSub.textContent = sub;
+    els.saveHeroSub.textContent =
+      `Orizzonte selezionato: ${selectedHorizon} anni • Break-even: ${beText(d.beM)} • Bottigliette/anno: ${fmtNum(d.bottlesSavedYear)}`;
   }
 
   function summary(d){
-    const be = beText(d.beM);
     const cn = (els.clientName.value || '').trim();
     const rn = (els.consultantName.value || '').trim();
     return [
       'Riepilogo consulenza – Calcolo ROI eSpring',
       cn ? `Cliente: ${cn}` : null,
-      rn ? `Referente: ${rn}` : null,
+      rn ? `ABO Partner: ${rn}` : null,
       `Scenario: ${d.people} persone; bere ${d.drinkPerPerson.toLocaleString('it-IT',{maximumFractionDigits:1})} L/persona/giorno; cucina ${d.cookLiters.toLocaleString('it-IT',{maximumFractionDigits:1})} L/giorno`,
       `Prezzo bottiglie: ${d.priceBottle.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})} €/L`,
       `Consumo totale: ${fmtNum(d.litersYear)} L/anno`,
-      `Break-even: ${be}`,
+      `Break-even: ${beText(d.beM)}`,
       `Diff. €/L (media 5 anni): ${fmtEUR(d.diffPerLiter)} /L (${d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`,
       `Risparmio totale: 5 anni ${moneySigned(d.save5)} | 10 anni ${moneySigned(d.save10)}`,
       `Bottigliette 500 ml evitate/anno: ${fmtNum(d.bottlesSavedYear)}`
@@ -869,13 +874,6 @@
     doc.text(title, x, y);
   }
 
-  function addSmall(doc, x, y, text){
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(9.5);
-    doc.setTextColor(75,85,99);
-    doc.text(text, x, y);
-  }
-
   function addKpi(doc, x, y, w, h, title, value){
     drawBox(doc, x, y, w, h, [255,255,255], [229,231,235]);
     doc.setFont("helvetica","bold");
@@ -884,9 +882,10 @@
     doc.text(title, x+6, y+8);
 
     doc.setFont("helvetica","bold");
-    doc.setFontSize(14);
+    doc.setFontSize(13.5);
     doc.setTextColor(15,23,42);
-    doc.text(value, x+6, y+18);
+    const lines = wrap(doc, value, w-12);
+    doc.text(lines, x+6, y+18);
   }
 
   function addTable3(doc, x, y, colW, rows, header){
@@ -894,7 +893,6 @@
     const rowH = 7;
     const totalW = w1+w2+w3;
 
-    // header
     drawBox(doc, x, y, totalW, rowH, [248,250,252], [229,231,235]);
     doc.setFont("helvetica","bold");
     doc.setFontSize(9.5);
@@ -905,7 +903,6 @@
 
     y += rowH;
 
-    // rows
     doc.setFont("helvetica","normal");
     doc.setFontSize(9.5);
     doc.setTextColor(15,23,42);
@@ -924,8 +921,6 @@
     const d = calc(true);
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit:"mm", format:"a4" });
-
-    // safety: evita side-effect strani (spaziatura caratteri)
     try { doc.setCharSpace(0); } catch(e){}
 
     const pageW = doc.internal.pageSize.getWidth();
@@ -936,7 +931,6 @@
     // ===== PAGE 1 =====
     let y = 14;
 
-    // Header: logo + titolo
     try{
       const logo = await fetchAsDataURL("espring-logo.png");
       doc.addImage(logo, "PNG", M, y-4, 28, 0);
@@ -957,13 +951,12 @@
     if (cn || rn){
       doc.setTextColor(15,23,42);
       doc.setFontSize(10);
-      doc.text(cn ? `Cliente: ${cn}` : "", M+32, y+12);
-      doc.text(rn ? `Referente: ${rn}` : "", M+32, y+18);
+      if (cn) doc.text(`Cliente: ${cn}`, M+32, y+12);
+      if (rn) doc.text(`ABO Partner: ${rn}`, M+32, y+18);
     }
 
     y += 26;
 
-    // Big savings box
     drawBox(doc, M, y, W, 26, [239,246,255], [219,234,254]);
     doc.setFont("helvetica","bold");
     doc.setFontSize(10);
@@ -982,7 +975,6 @@
 
     y += 34;
 
-    // KPIs row (3)
     const gap = 6;
     const kW = (W - gap*2) / 3;
     addKpi(doc, M, y, kW, 24, "Break-even", beText(d.beM));
@@ -991,11 +983,10 @@
 
     y += 32;
 
-    // Scenario & cost table
     addSectionTitle(doc, M, y, "Scenario e costi (sintesi)");
     y += 6;
 
-    const colW = [92, 45, 45]; // totale 182 (=W)
+    const colW = [92, 45, 45];
     const rows = [
       ["Persone", String(d.people), ""],
       ["Bere", `${d.drinkPerPerson.toLocaleString('it-IT',{maximumFractionDigits:1})} L/persona/g`, ""],
@@ -1008,17 +999,14 @@
     y = addTable3(doc, M, y, colW, rows, ["Voce", "Bottiglie", "eSpring"]);
     y += 6;
 
-    // Nota filtri (wrap pulito)
     const note = `Nota filtri: nel 1° anno servono ${d.extraFiltersYear1} filtri aggiuntivi (0 se ≤ 5.000 L/anno). Il primo filtro è incluso nel dispositivo.`;
     drawBox(doc, M, y, W, 16, [236,253,245], [209,250,229]);
     doc.setFont("helvetica","normal");
     doc.setFontSize(9.5);
     doc.setTextColor(15,23,42);
-    const lines = wrap(doc, note, W-12);
-    doc.text(lines, M+6, y+6);
+    doc.text(wrap(doc, note, W-12), M+6, y+6);
     y += 22;
 
-    // Prestazioni & certificazioni (sintesi)
     addSectionTitle(doc, M, y, "Prestazioni & certificazioni (sintesi)");
     y += 6;
 
@@ -1031,8 +1019,7 @@
       doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(15,23,42);
       doc.text(title, x+5, y+7);
       doc.setFont("helvetica","normal"); doc.setFontSize(9.2); doc.setTextColor(75,85,99);
-      const bl = wrap(doc, body, bW-10);
-      doc.text(bl, x+5, y+13);
+      doc.text(wrap(doc, body, bW-10), x+5, y+13);
     }
 
     miniCard(M, y, "170+ contaminanti", "Tra cui microplastiche, PFOA e PFOS e prodotti farmaceutici.");
@@ -1042,31 +1029,10 @@
     miniCard(M+bW+bGap, y, "Filtro al Carbone e3", "Può trattare fino a 5.000 L/anno (in base all’uso).");
     y += bH + 8;
 
-    // Documenti
     doc.setFont("helvetica","normal");
     doc.setFontSize(9.5);
     doc.setTextColor(75,85,99);
     doc.text("Documenti: prestazioni-espring.pdf • Infografica-Generale-eSpring.pdf", M, y);
-    y += 10;
-
-    // Prossimi passi (closing)
-    addSectionTitle(doc, M, y, "Prossimi passi (da definire insieme)");
-    y += 6;
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(10);
-    doc.setTextColor(15,23,42);
-    const steps = [
-      "Conferma opzione di acquisto (soluzione consigliata)",
-      "Valutazione rate disponibili (3 / 6 / 8 / 12 / 24)",
-      "Pianificazione consegna e prima installazione",
-      "Invio riepilogo e contatto per eventuali domande"
-    ];
-    let sy = y;
-    for (const s of steps){
-      doc.circle(M+2.5, sy-1.3, 1.2, "S");
-      doc.text(s, M+6, sy);
-      sy += 6;
-    }
 
     doc.setFontSize(9);
     doc.setTextColor(107,114,128);
@@ -1088,12 +1054,10 @@
 
     y2 += 14;
 
-    // Immagini grafici
     let costImg = null, bottleImg = null;
     try{ costImg = costChart.toBase64Image(); } catch(e){}
     try{ bottleImg = bottleChart.toBase64Image(); } catch(e){}
 
-    // layout grafici (anti-overlap)
     const topChartH = 70;
     const halfW = (W - 8) / 2;
 
@@ -1107,7 +1071,6 @@
     }
     y2 += topChartH + 10;
 
-    // bottom left: bar chart
     if (bottleImg){
       drawBox(doc, M, y2, halfW, 55, [255,255,255], [229,231,235]);
       doc.addImage(bottleImg, "PNG", M+4, y2+6, halfW-8, 55-12);
@@ -1117,7 +1080,6 @@
       doc.text("Grafico bottigliette non disponibile.", M+6, y2+12);
     }
 
-    // bottom right: mini-table
     drawBox(doc, M+halfW+8, y2, halfW, 55, [255,255,255], [229,231,235]);
     doc.setFont("helvetica","bold"); doc.setFontSize(11); doc.setTextColor(15,23,42);
     doc.text("Costo cumulato (stima)", M+halfW+12, y2+10);
@@ -1142,28 +1104,19 @@
 
     y2 += 55 + 12;
 
-    // Certificazioni (dossier) + immagine piena (fit)
     doc.setFont("helvetica","bold");
     doc.setFontSize(13);
     doc.setTextColor(15,23,42);
     doc.text("Certificazioni (dossier)", M, y2);
-
     y2 += 6;
 
     let certImg = null;
     try{ certImg = await fetchAsDataURL("certificazioni.png"); } catch(e){}
 
     if (certImg){
-      // calcola dimensioni mantenendo proporzione, fit nello spazio restante
       const availH = pageH - y2 - 18;
-      const imgW = W;
-      // prova una stima altezza: jsPDF non legge dimensioni immagine, quindi usiamo una scalatura prudente
-      // Strategia: usa width piena e limite altezza disponibile; se "troppo alta", scala verso il basso.
-      let targetW = imgW;
-      let targetH = availH; // massimo
-      // metti un box e poi l'immagine dentro
-      drawBox(doc, M, y2, targetW, targetH, [255,255,255], [229,231,235]);
-      doc.addImage(certImg, "PNG", M+2, y2+2, targetW-4, targetH-4);
+      drawBox(doc, M, y2, W, availH, [255,255,255], [229,231,235]);
+      doc.addImage(certImg, "PNG", M+2, y2+2, W-4, availH-4);
     } else {
       drawBox(doc, M, y2, W, 40, [255,255,255], [229,231,235]);
       doc.setFont("helvetica","normal");
@@ -1185,7 +1138,7 @@
     const file = new File([blob], fname, { type: "application/pdf" });
     const blobUrl = URL.createObjectURL(blob);
 
-    // Prova share (mobile)
+    // Share (mobile)
     try{
       if (navigator.canShare && navigator.canShare({ files: [file] })){
         await navigator.share({
@@ -1197,18 +1150,19 @@
       }
     } catch(e){}
 
-    // PATCH B: apertura più compatibile (link + click), poi fallback download
+    // Download link (più compatibile)
     try{
       const a = document.createElement("a");
       a.href = blobUrl;
+      a.download = fname;         // forza download se il browser lo permette
       a.target = "_blank";
       a.rel = "noopener noreferrer";
       document.body.appendChild(a);
       a.click();
       a.remove();
     } catch(e){
-      // fallback download
-      doc.save(fname);
+      // fallback tab/download classico
+      try{ doc.save(fname); } catch(err){}
     } finally {
       setTimeout(()=> URL.revokeObjectURL(blobUrl), 20000);
     }
@@ -1224,11 +1178,24 @@
   calcBtn.addEventListener("click", ()=>{
     const d = calc(true);
     renderHero(d);
+
     resultsWrap.style.display = "block";
     enablePostActions();
 
-    // PATCH A: scroll ai risultati dopo reveal
-    document.querySelector('#resultsWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // micro-animazione: reset + play
+    resultsWrap.classList.remove("revealAnim");
+    void resultsWrap.offsetWidth;
+    resultsWrap.classList.add("revealAnim");
+
+    // glow sul box risparmio
+    const heroBox = document.querySelector(".saveHero");
+    if (heroBox){
+      heroBox.classList.remove("revealGlow");
+      void heroBox.offsetWidth;
+      heroBox.classList.add("revealGlow");
+    }
+
+    resultsWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
   els.h5.addEventListener("click", ()=> setHorizon(5));
@@ -1265,12 +1232,6 @@
         if (d && resultsWrap.style.display === "block") renderHero(d);
       });
     });
-  });
-
-  // wow enable rules
-  ['input','change'].forEach(evt=>{
-    els.clientName.addEventListener(evt, updateRevealButton);
-    els.consultantName.addEventListener(evt, updateRevealButton);
   });
 
   // init
