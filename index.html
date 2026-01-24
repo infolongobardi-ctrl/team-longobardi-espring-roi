@@ -15,8 +15,6 @@
       --line:#e5e7eb;
       --brand:#0f766e;
       --brand2:#1d4ed8;
-      --good:#047857;
-      --warn:#b45309;
       --shadow: 0 18px 45px rgba(17,24,39,.09);
     }
     *{box-sizing:border-box}
@@ -274,6 +272,15 @@
             </div>
           </div>
 
+          <!-- PRIMA/DOPO (marketing chiaro) -->
+          <div class="callout" style="margin-top:14px" id="primaDopo">
+            <b>Prima (bottiglie)</b>: <span id="pdBottleYear">—</span> / anno •
+            <b>Dopo (eSpring)</b>: <span id="pdEspringAvgYear">—</span> / anno (media su 5 anni) <br>
+            <b>Risparmio medio annuo</b>: <span id="pdSaveYear">—</span> (<span id="pdSaveYearPerc">—</span>) •
+            <b>Break-even</b>: <span id="pdBE">—</span> •
+            <b>Bottigliette evitate</b>: <span id="pdBottles">—</span> / anno
+          </div>
+
           <div class="divider"></div>
 
           <div class="charts">
@@ -341,12 +348,12 @@
             <div class="benefit">
               <div class="tag">Riduzione microbica</div>
               <h3>Fino a 99,9999% batteri</h3>
-              <p>Valori di riferimento dal materiale ufficiale: 99,9999% batteri, 99,99% virus, 99,9% cisti.</p>
+              <p>Valori di riferimento: 99,9999% batteri, 99,99% virus, 99,9% cisti.</p>
             </div>
             <div class="benefit">
               <div class="tag">Filtrazione</div>
               <h3>170+ contaminanti</h3>
-              <p>Include riferimenti come microplastiche, PFOA/PFOS e prodotti farmaceutici (materiale ufficiale).</p>
+              <p>Include riferimenti come microplastiche, PFOA/PFOS e prodotti farmaceutici.</p>
             </div>
           </div>
 
@@ -385,6 +392,13 @@
     cost10B: document.getElementById('cost10B'),
     cost10E: document.getElementById('cost10E'),
     bottlesSavedYear: document.getElementById('bottlesSavedYear'),
+
+    pdBottleYear: document.getElementById('pdBottleYear'),
+    pdEspringAvgYear: document.getElementById('pdEspringAvgYear'),
+    pdSaveYear: document.getElementById('pdSaveYear'),
+    pdSaveYearPerc: document.getElementById('pdSaveYearPerc'),
+    pdBE: document.getElementById('pdBE'),
+    pdBottles: document.getElementById('pdBottles'),
 
     share: document.getElementById('share'),
     copy: document.getElementById('copy'),
@@ -431,7 +445,7 @@
     });
   }
 
-  // Filtri aggiuntivi necessari dato un consumo cumulato; il primo è incluso nel dispositivo
+  // Filtri extra necessari dato un consumo cumulato; il primo è incluso nel dispositivo
   function totalExtraFiltersNeeded(totalLiters){
     return Math.max(0, Math.ceil(totalLiters / FILTER_CAPACITY_L) - 1);
   }
@@ -441,12 +455,12 @@
     return ESPRING_DEVICE + totalExtraFiltersNeeded(liters) * ESPRING_FILTER;
   }
 
-  // Consumabili stimati nel 1° anno (0€ se <= 5.000 L/anno; >0€ se superi già 5.000 L in un anno)
+  // Consumabili stimati nel 1° anno (0€ se <= 5.000 L/anno)
   function espringConsumablesYear1(litersYear){
     return totalExtraFiltersNeeded(litersYear) * ESPRING_FILTER;
   }
 
-  // Break-even cercato mese per mese su costi cumulati (max 20 anni)
+  // Break-even mese per mese su costi cumulati (max 20 anni)
   function breakEvenMonths(priceBottle, litersYear){
     const litersMonth = litersYear / 12;
     for(let m=1; m<=240; m++){
@@ -483,7 +497,7 @@
     const cost5E = espringTotalCost(5, litersYear);
     const cost10E = espringTotalCost(10, litersYear);
 
-    // Risparmio
+    // Risparmio totale
     const save5 = cost5B - cost5E;
     const save10 = cost10B - cost10E;
 
@@ -497,6 +511,18 @@
 
     // Bottigliette 500 ml evitate
     const bottlesSavedYear = litersYear / 0.5;
+
+    // PRIMA/DOPO: media annua su 5 anni (più onesta)
+    const avgEspringYear_5y = cost5E / 5;
+    const saveAvgYear = yearCostB - avgEspringYear_5y;
+    const saveAvgYearPerc = (saveAvgYear / yearCostB) * 100;
+
+    els.pdBottleYear.textContent = fmtEUR(yearCostB);
+    els.pdEspringAvgYear.textContent = fmtEUR(avgEspringYear_5y);
+    els.pdSaveYear.textContent = (saveAvgYear >= 0 ? fmtEUR(saveAvgYear) : ('-' + fmtEUR(Math.abs(saveAvgYear))));
+    els.pdSaveYearPerc.textContent = saveAvgYearPerc.toLocaleString('it-IT', {maximumFractionDigits:1}) + '%';
+    els.pdBE.textContent = (beM === null) ? 'Oltre 20 anni' : ((beM < 12) ? (beM + ' mesi') : ((beM/12).toLocaleString('it-IT',{maximumFractionDigits:1}) + ' anni'));
+    els.pdBottles.textContent = fmtNum(bottlesSavedYear);
 
     // Render tabella
     els.litersYearB.textContent = fmtNum(litersYear) + ' L';
