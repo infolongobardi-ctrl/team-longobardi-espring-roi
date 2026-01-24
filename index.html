@@ -52,6 +52,22 @@
       transform: translate(40px,-40px);
       pointer-events:none;
     }
+    .hero:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: url('espring-launch_08-25_news-hero_1888x628.jpg') center/cover no-repeat;
+  opacity: .10;              /* leggerissima */
+  filter: saturate(0.95) contrast(1.05);
+  mix-blend-mode: screen;    /* morbido sulle gradient */
+  pointer-events:none;
+}
+
+.heroTop, .videoWrap, .heroLinks, .heroBar, .heroNote{
+  position:relative;
+  z-index:1;                 /* testo sopra l’immagine */
+}
+
     .heroTop{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
     .hero h1{margin:0;font-size:22px;line-height:1.25}
     .hero p{margin:8px 0 0;max-width:90ch;opacity:.96;font-size:14px;line-height:1.45}
@@ -1163,3 +1179,4 @@
 </script>
 </body>
 </html>
+
