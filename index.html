@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calcolatore ROI eSpring – Team Longobardi</title>
-  <meta name="description" content="Calcolatore ROI eSpring vs acqua in bottiglia con grafici e break-even. Team Longobardi." />
+  <meta name="description" content="Calcolatore ROI eSpring vs acqua in bottiglia con grafici, break-even e video. Team Longobardi." />
 
   <style>
     :root{
@@ -33,7 +33,6 @@
     a{color:var(--brand2);text-decoration:none}
     a:hover{text-decoration:underline}
 
-    /* HERO */
     .hero{
       border-radius:22px;
       padding:22px 22px 18px;
@@ -64,10 +63,28 @@
     }
     .dot{width:8px;height:8px;border-radius:50%;background:#34d399}
     .pill b{font-weight:900}
-    .heroLinks{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;opacity:.95}
+    .heroLinks{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;opacity:.95;align-items:center}
     .heroLinks a{color:#fff}
+    .heroLinks .ghostBtn{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.20);
+      color:#fff;
+      font-size:13px;
+    }
 
-    /* LAYOUT */
+    .videoWrap{
+      margin-top:14px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 18px 45px rgba(17,24,39,.18);
+      background: rgba(255,255,255,.10);
+    }
+    .videoWrap video{display:block;width:100%}
+    .heroNote{font-size:12.5px;line-height:1.45;color:rgba(255,255,255,.92);margin-top:10px}
+
     .grid{display:grid;grid-template-columns: 380px 1fr;gap:18px;margin-top:16px}
     @media (max-width: 980px){.grid{grid-template-columns:1fr}}
     .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
@@ -76,7 +93,6 @@
     h2{margin:0;font-size:16px}
     .hint{color:var(--muted);font-size:12.5px;margin-top:6px;line-height:1.35}
 
-    /* INPUTS */
     .row{display:flex;gap:12px;align-items:center;justify-content:space-between;margin:12px 0}
     .row label{font-size:13px;color:var(--text);font-weight:800}
     .row .val{font-variant-numeric: tabular-nums; color:var(--brand2); font-weight:900}
@@ -84,7 +100,6 @@
     .rangeMeta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:6px}
     .divider{height:1px;background:var(--line);margin:14px 0}
 
-    /* KPIs */
     .kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media (max-width: 620px){.kpis{grid-template-columns:1fr}}
     .kpi{padding:14px;border:1px solid var(--line);border-radius:16px;background:#fff}
@@ -92,14 +107,12 @@
     .kpi .n{font-size:20px;font-weight:950;color:var(--text);font-variant-numeric: tabular-nums}
     .kpi .s{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.35}
 
-    /* TABLE */
     table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:16px;border:1px solid var(--line)}
     th,td{padding:12px 12px;border-bottom:1px solid var(--line);font-size:13px}
     th{background:#f8fafc;text-align:left;color:#0f172a}
     tr:last-child td{border-bottom:none}
     .right{text-align:right;font-variant-numeric: tabular-nums}
 
-    /* BENEFITS */
     .benefits{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:18px}
     @media (max-width: 980px){.benefits{grid-template-columns:1fr}}
     .benefit{
@@ -110,16 +123,13 @@
     .benefit p{margin:8px 0 0;color:var(--muted);font-size:12.5px;line-height:1.45}
     .tag{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:#065f46;background:#ecfdf5;border:1px solid #d1fae5;padding:6px 10px;border-radius:999px;margin-bottom:10px}
 
-    /* CHARTS */
     .charts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
     @media (max-width: 980px){.charts{grid-template-columns:1fr}}
     .chartCard{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px}
-    .chartTitle{display:flex;align-items:center;justify-content:space-between;gap:10px}
     .chartTitle strong{font-size:13px}
     .small{font-size:12px;color:var(--muted);line-height:1.35;margin-top:6px}
     canvas{max-width:100%}
 
-    /* CTA */
     .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     button{
       border:1px solid var(--line);
@@ -136,9 +146,18 @@
     }
     button:hover{filter:brightness(0.985)}
     .note{font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:10px}
+    .callout{
+      margin-top:12px;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid #dbeafe;
+      background:linear-gradient(180deg,#eff6ff 0%, #ffffff 100%);
+      color:#0f172a;
+      font-size:12.5px;
+      line-height:1.45;
+    }
   </style>
 
-  <!-- Chart.js (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 
@@ -149,29 +168,40 @@
         <div>
           <h1>Calcolatore ROI eSpring – Team Longobardi</h1>
           <p>
-            Calcola in modo chiaro quanto puoi risparmiare passando dall’acqua in bottiglia a eSpring,
-            includendo anche l’acqua usata per cucinare. I grafici rendono immediato il confronto nel tempo.
+            Un modo semplice per far “vedere” il risparmio (e l’impatto sulla plastica) rispetto alle bottiglie,
+            includendo anche l’acqua usata per cucinare.
           </p>
+
           <div class="heroBar">
-            <div class="pill"><span class="dot"></span><b>Break-even</b> visibile nel grafico</div>
+            <div class="pill"><span class="dot"></span><b>Break-even</b> chiaro e misurabile</div>
             <div class="pill"><span class="dot"></span><b>Risparmio</b> in € e %</div>
-            <div class="pill"><span class="dot"></span><b>Impatto</b> bottigliette evitate</div>
+            <div class="pill"><span class="dot"></span><b>10.000 bottigliette</b> ogni 5.000 L</div>
           </div>
+
           <div class="heroLinks">
             <a href="https://www.espring.com" target="_blank" rel="noopener">www.espring.com</a>
-            <span>•</span>
-            <a href="https://www.amway.it/eSpring%E2%84%A2/c/brand_400" target="_blank" rel="noopener">Pagina eSpring su Amway.it</a>
+            <a class="ghostBtn" href="Infografica-Generale-eSpring.pdf" target="_blank" rel="noopener">Apri infografica (PDF)</a>
+          </div>
+
+          <div class="videoWrap">
+            <video controls playsinline preload="metadata" poster="hero.jpg">
+              <source src="presentazione-espring.mp4" type="video/mp4">
+              Il tuo browser non supporta il video HTML5.
+            </video>
+          </div>
+
+          <div class="heroNote">
+            Nota: il primo filtro è incluso nel dispositivo; i filtri successivi si acquistano solo dopo aver superato i 5.000 litri cumulati.
           </div>
         </div>
       </div>
     </section>
 
     <div class="grid">
-      <!-- INPUTS -->
       <section class="card">
         <div class="hd">
           <h2>Personalizza lo scenario</h2>
-          <div class="hint">Imposta i valori in base alla famiglia del cliente. I risultati si aggiornano in tempo reale.</div>
+          <div class="hint">I risultati si aggiornano in tempo reale.</div>
         </div>
         <div class="bd">
           <div class="row">
@@ -209,13 +239,12 @@
             <button id="copy">Copia riepilogo</button>
           </div>
 
-          <div class="note" id="assumptionNote">
-            Nota: le bottigliette evitate dipendono dai litri effettivi (bere + cucina), non dalla capacità massima del filtro.
+          <div class="callout">
+            Riferimento rapido: <b>5.000 L</b> = <b>10.000</b> bottigliette da 500 ml (monouso) potenzialmente evitate.
           </div>
         </div>
       </section>
 
-      <!-- OUTPUTS -->
       <section class="card">
         <div class="hd">
           <h2>Risultati</h2>
@@ -226,22 +255,22 @@
             <div class="kpi">
               <div class="t">Break-even (rientro investimento)</div>
               <div class="n" id="breakeven">—</div>
-              <div class="s">Tempo stimato per andare “in pari”.</div>
+              <div class="s">Calcolato su costi cumulati (dispositivo + filtri acquistati quando servono).</div>
             </div>
             <div class="kpi">
-              <div class="t">Risparmio per litro</div>
+              <div class="t">Risparmio per litro (media 5 anni)</div>
               <div class="n" id="savePerLiter">—</div>
-              <div class="s">Differenza €/L e % tra bottiglie ed eSpring.</div>
+              <div class="s">€/L e % su una finestra realistica (include dispositivo).</div>
             </div>
             <div class="kpi">
               <div class="t">Risparmio totale (5 anni)</div>
               <div class="n" id="save5">—</div>
-              <div class="s">Include costo iniziale e filtri annuali.</div>
+              <div class="s">Include dispositivo + filtri acquistati dopo i 5.000 L.</div>
             </div>
             <div class="kpi">
               <div class="t">Risparmio totale (10 anni)</div>
               <div class="n" id="save10">—</div>
-              <div class="s">Per chi valuta sul lungo periodo.</div>
+              <div class="s">Visione a lungo periodo.</div>
             </div>
           </div>
 
@@ -249,17 +278,12 @@
 
           <div class="charts">
             <div class="chartCard">
-              <div class="chartTitle">
-                <strong>Costo cumulato (0–10 anni)</strong>
-              </div>
-              <div class="small">Mostra l’andamento dei costi totali: bottiglie vs eSpring. La linea si aggiorna con i tuoi parametri.</div>
+              <div class="chartTitle"><strong>Costo cumulato (0–10 anni)</strong></div>
+              <div class="small">Il punto in cui le linee si incrociano è il break-even.</div>
               <canvas id="costChart" height="180"></canvas>
             </div>
-
             <div class="chartCard">
-              <div class="chartTitle">
-                <strong>Bottigliette evitate</strong>
-              </div>
+              <div class="chartTitle"><strong>Bottigliette evitate</strong></div>
               <div class="small">Stima bottigliette da 500 ml evitate (anno / 5 anni / 10 anni).</div>
               <canvas id="bottleChart" height="180"></canvas>
             </div>
@@ -282,7 +306,7 @@
                 <td class="right" id="litersYearE">—</td>
               </tr>
               <tr>
-                <td>Costo annuo stimato</td>
+                <td>Costo annuo stimato (1° anno, solo consumabili)</td>
                 <td class="right" id="yearCostB">—</td>
                 <td class="right" id="yearCostE">—</td>
               </tr>
@@ -305,24 +329,24 @@
           </table>
 
           <div class="note" id="capacityNote" style="margin-top:12px;">
-            Assunzioni: costo iniziale dispositivo + 1 filtro/anno. Se superi 5.000 L/anno, potrebbe servire più di un filtro.
+            Modello: dispositivo include 1 filtro; i filtri successivi si acquistano quando i litri cumulati superano multipli di 5.000 L.
           </div>
 
           <div class="benefits">
             <div class="benefit">
-              <div class="tag">Focus: qualità</div>
-              <h3>Purificazione + UV-C LED</h3>
-              <p>Il sistema combina filtrazione e trattamento UV-C LED (utile per la riduzione microbiologica dichiarata nelle info ufficiali).</p>
+              <div class="tag">Punto chiave</div>
+              <h3>Trattiene i minerali benefici</h3>
+              <p>Importante per chi vuole acqua “più pulita” senza rinunciare ai minerali.</p>
             </div>
             <div class="benefit">
-              <div class="tag">Focus: sicurezza</div>
-              <h3>Performance dichiarate</h3>
-              <p>Valori di riferimento spesso citati: fino a 99,9999% batteri, 99,99% virus, 99,9% cisti (verifica sempre la scheda prodotto aggiornata).</p>
+              <div class="tag">Riduzione microbica</div>
+              <h3>Fino a 99,9999% batteri</h3>
+              <p>Valori di riferimento dal materiale ufficiale: 99,9999% batteri, 99,99% virus, 99,9% cisti.</p>
             </div>
             <div class="benefit">
-              <div class="tag">Focus: praticità</div>
-              <h3>Comodità e continuità</h3>
-              <p>Acqua per bere e cucinare direttamente a casa: meno acquisti, meno trasporto, meno plastica da gestire.</p>
+              <div class="tag">Filtrazione</div>
+              <h3>170+ contaminanti</h3>
+              <p>Include riferimenti come microplastiche, PFOA/PFOS e prodotti farmaceutici (materiale ufficiale).</p>
             </div>
           </div>
 
@@ -332,10 +356,10 @@
   </div>
 
 <script>
-  // Prezzi: aggiornali se cambiano i listini
-  const ESPRING_DEVICE = 1516.77; // €
-  const ESPRING_FILTER = 287.24;  // € / anno (1 filtro/anno)
-  const FILTER_CAPACITY_L = 5000; // litri nominali
+  // Valori (aggiornali se cambiano listini)
+  const ESPRING_DEVICE = 1516.77; // € dispositivo (IVA inclusa; include 1 filtro)
+  const ESPRING_FILTER = 287.24;  // € filtro e prefiltro di ricambio
+  const FILTER_CAPACITY_L = 5000; // litri per filtro
 
   const els = {
     priceBottle: document.getElementById('priceBottle'),
@@ -364,8 +388,6 @@
 
     share: document.getElementById('share'),
     copy: document.getElementById('copy'),
-
-    assumptionNote: document.getElementById('assumptionNote'),
     capacityNote: document.getElementById('capacityNote'),
   };
 
@@ -373,14 +395,10 @@
   const fmtNum = (n) => n.toLocaleString('it-IT', {maximumFractionDigits: 0});
   const fmt1 = (n) => n.toLocaleString('it-IT', {minimumFractionDigits:1, maximumFractionDigits:1});
 
-  // Charts
   let costChart, bottleChart;
 
   function buildCharts(){
-    const ctx1 = document.getElementById('costChart');
-    const ctx2 = document.getElementById('bottleChart');
-
-    costChart = new Chart(ctx1, {
+    costChart = new Chart(document.getElementById('costChart'), {
       type: 'line',
       data: {
         labels: Array.from({length: 11}, (_,i)=> String(i)),
@@ -399,7 +417,7 @@
       }
     });
 
-    bottleChart = new Chart(ctx2, {
+    bottleChart = new Chart(document.getElementById('bottleChart'), {
       type: 'bar',
       data: {
         labels: ['1 anno', '5 anni', '10 anni'],
@@ -408,11 +426,36 @@
       options: {
         responsive: true,
         plugins: { legend: { position: 'bottom' } },
-        scales: {
-          y: { title: { display: true, text: 'N° bottigliette' } }
-        }
+        scales: { y: { title: { display: true, text: 'N° bottigliette' } } }
       }
     });
+  }
+
+  // Filtri aggiuntivi necessari dato un consumo cumulato; il primo è incluso nel dispositivo
+  function totalExtraFiltersNeeded(totalLiters){
+    return Math.max(0, Math.ceil(totalLiters / FILTER_CAPACITY_L) - 1);
+  }
+
+  function espringTotalCost(years, litersYear){
+    const liters = litersYear * years;
+    return ESPRING_DEVICE + totalExtraFiltersNeeded(liters) * ESPRING_FILTER;
+  }
+
+  // Consumabili stimati nel 1° anno (0€ se <= 5.000 L/anno; >0€ se superi già 5.000 L in un anno)
+  function espringConsumablesYear1(litersYear){
+    return totalExtraFiltersNeeded(litersYear) * ESPRING_FILTER;
+  }
+
+  // Break-even cercato mese per mese su costi cumulati (max 20 anni)
+  function breakEvenMonths(priceBottle, litersYear){
+    const litersMonth = litersYear / 12;
+    for(let m=1; m<=240; m++){
+      const bottleCost = (litersMonth * m) * priceBottle;
+      const litersCum = litersMonth * m;
+      const espringCost = ESPRING_DEVICE + totalExtraFiltersNeeded(litersCum) * ESPRING_FILTER;
+      if (espringCost <= bottleCost) return m;
+    }
+    return null;
   }
 
   function calc(){
@@ -435,29 +478,27 @@
     const cost5B = yearCostB * 5;
     const cost10B = yearCostB * 10;
 
-    // eSpring: 1 filtro/anno + costo iniziale
-    const yearCostE = ESPRING_FILTER;
-    const cost5E = ESPRING_DEVICE + ESPRING_FILTER * 5;
-    const cost10E = ESPRING_DEVICE + ESPRING_FILTER * 10;
+    // eSpring (corretto: 1° filtro incluso; extra filtri solo dopo multipli di 5.000 L)
+    const yearCostE = espringConsumablesYear1(litersYear);
+    const cost5E = espringTotalCost(5, litersYear);
+    const cost10E = espringTotalCost(10, litersYear);
 
     // Risparmio
     const save5 = cost5B - cost5E;
     const save10 = cost10B - cost10E;
 
-    // per litro (media)
-    const costPerLiterE = yearCostE / litersYear;
-    const diffPerLiter = priceBottle - costPerLiterE;
+    // Risparmio per litro: media su 5 anni (include dispositivo)
+    const avgCostPerLiterE_5y = cost5E / (litersYear * 5);
+    const diffPerLiter = priceBottle - avgCostPerLiterE_5y;
     const percSavePerLiter = (diffPerLiter / priceBottle) * 100;
 
     // Break-even
-    const yearlyDiff = yearCostB - yearCostE;
-    let tYears = Infinity;
-    if (yearlyDiff > 0) tYears = ESPRING_DEVICE / yearlyDiff;
+    const beM = breakEvenMonths(priceBottle, litersYear);
 
-    // Bottigliette 500 ml
+    // Bottigliette 500 ml evitate
     const bottlesSavedYear = litersYear / 0.5;
 
-    // Table
+    // Render tabella
     els.litersYearB.textContent = fmtNum(litersYear) + ' L';
     els.litersYearE.textContent = fmtNum(litersYear) + ' L';
     els.yearCostB.textContent = fmtEUR(yearCostB);
@@ -468,15 +509,9 @@
     els.cost10E.textContent = fmtEUR(cost10E);
     els.bottlesSavedYear.textContent = fmtNum(bottlesSavedYear);
 
-    // KPIs
-    if (tYears === Infinity) {
-      els.breakeven.textContent = 'Non raggiunto';
-    } else {
-      const months = tYears * 12;
-      els.breakeven.textContent = (tYears < 1)
-        ? (Math.round(months) + ' mesi')
-        : (tYears.toLocaleString('it-IT', {maximumFractionDigits:1}) + ' anni');
-    }
+    // KPI
+    els.breakeven.textContent =
+      (beM === null) ? 'Oltre 20 anni' : ((beM < 12) ? (beM + ' mesi') : ((beM/12).toLocaleString('it-IT',{maximumFractionDigits:1}) + ' anni'));
 
     els.savePerLiter.textContent =
       fmtEUR(diffPerLiter) + ' /L (' + percSavePerLiter.toLocaleString('it-IT', {maximumFractionDigits:1}) + '%)';
@@ -484,53 +519,40 @@
     els.save5.textContent  = (save5  >= 0 ? fmtEUR(save5)  : ('-' + fmtEUR(Math.abs(save5))));
     els.save10.textContent = (save10 >= 0 ? fmtEUR(save10) : ('-' + fmtEUR(Math.abs(save10))));
 
-    // Capacity note
-    if (litersYear > FILTER_CAPACITY_L){
-      els.capacityNote.innerHTML =
-        '<b>Nota importante:</b> con questi consumi superi ' + fmtNum(FILTER_CAPACITY_L) +
-        ' L/anno. Il modello assume 1 filtro/anno, ma potrebbe servirne più di uno.';
-      els.capacityNote.style.borderLeft = '4px solid #f59e0b';
-      els.capacityNote.style.paddingLeft = '10px';
-    } else {
-      els.capacityNote.textContent =
-        'Assunzioni: costo iniziale dispositivo + 1 filtro/anno. Se superi 5.000 L/anno, potrebbe servire più di un filtro.';
-      els.capacityNote.style.borderLeft = '0';
-      els.capacityNote.style.paddingLeft = '0';
-    }
+    // Nota filtri
+    const extraFiltersYear1 = totalExtraFiltersNeeded(litersYear);
+    els.capacityNote.innerHTML =
+      'Con questi consumi, nel 1° anno servono <b>' + extraFiltersYear1 +
+      '</b> filtri aggiuntivi (0 se ≤ 5.000 L/anno). Il primo filtro è già incluso nel dispositivo.';
 
-    // Charts data
+    // Grafici
     const years = Array.from({length:11}, (_,i)=>i);
     const bottleCum = years.map(y => yearCostB * y);
-    const espringCum = years.map(y => (y===0 ? 0 : (ESPRING_DEVICE + ESPRING_FILTER * y)));
+    const espringCum = years.map(y => (y===0 ? 0 : espringTotalCost(y, litersYear)));
 
     costChart.data.datasets[0].data = bottleCum;
     costChart.data.datasets[1].data = espringCum;
     costChart.update();
 
-    bottleChart.data.datasets[0].data = [
-      bottlesSavedYear,
-      bottlesSavedYear * 5,
-      bottlesSavedYear * 10
-    ];
+    bottleChart.data.datasets[0].data = [bottlesSavedYear, bottlesSavedYear*5, bottlesSavedYear*10];
     bottleChart.update();
 
-    return { priceBottle, people, drinkPerPerson, cookLiters, litersYear, bottlesSavedYear, tYears, diffPerLiter, percSavePerLiter, save5, save10 };
+    return { priceBottle, people, drinkPerPerson, cookLiters, litersYear, bottlesSavedYear, save5, save10, diffPerLiter, percSavePerLiter, beM };
   }
 
   function summary(d){
-    const be = (d.tYears===Infinity) ? 'Non raggiunto' : (d.tYears<1 ? Math.round(d.tYears*12)+' mesi' : d.tYears.toLocaleString('it-IT',{maximumFractionDigits:1})+' anni');
+    const be = (d.beM === null) ? 'Oltre 20 anni' : ((d.beM < 12) ? (d.beM + ' mesi') : ((d.beM/12).toLocaleString('it-IT',{maximumFractionDigits:1}) + ' anni'));
     return [
       'Calcolatore ROI eSpring – Team Longobardi',
       `Scenario: ${d.people} persone; bere ${d.drinkPerPerson.toLocaleString('it-IT',{maximumFractionDigits:1})} L/persona/giorno; cucina ${d.cookLiters.toLocaleString('it-IT',{maximumFractionDigits:1})} L/giorno; bottiglie ${d.priceBottle.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})} €/L`,
       `Consumo totale: ${fmtNum(d.litersYear)} L/anno`,
       `Break-even: ${be}`,
-      `Risparmio per litro: ${fmtEUR(d.diffPerLiter)} /L (${d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`,
+      `Risparmio per litro (media 5 anni): ${fmtEUR(d.diffPerLiter)} /L (${d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`,
       `Risparmio totale: 5 anni ${fmtEUR(d.save5)} | 10 anni ${fmtEUR(d.save10)}`,
       `Bottigliette 500 ml evitate/anno: ${fmtNum(d.bottlesSavedYear)}`
     ].join('\n');
   }
 
-  // Wire inputs
   ['input','change'].forEach(evt=>{
     ['priceBottle','people','drinkPerPerson','cookLiters'].forEach(id=>{
       document.getElementById(id).addEventListener(evt, calc);
@@ -554,7 +576,6 @@
     window.open(url, '_blank');
   });
 
-  // Init
   buildCharts();
   calc();
 </script>
