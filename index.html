@@ -456,7 +456,7 @@
               <div class="kpi">
                 <div class="t">Break-even</div>
                 <div class="n" id="breakeven">—</div>
-                <div class="s">Calcolato mese per mese su costi cumulati.</div>
+                <div class="s" id="beHint">—</div>
               </div>
               <div class="kpi">
                 <div class="t">Differenza €/L (media 5 anni)</div>
@@ -520,7 +520,7 @@
                   <td class="right" id="cost10E">—</td>
                 </tr>
                 <tr>
-                  <td>Bottigliette da 500 ml risparmiate/anno</td>
+                  <td>Bottigliette da 500 ml evitate/anno</td>
                   <td class="right">—</td>
                   <td class="right" id="bottlesSavedYear">—</td>
                 </tr>
@@ -536,23 +536,23 @@
 
             <div class="specGrid">
               <div class="specCard">
-                <h3>Riduce efficacemente 170+ contaminanti</h3>
-                <p>Tra cui microplastiche, PFOA e PFOS e prodotti farmaceutici.</p>
+                <h3>Microplastiche • PFOA/PFOS</h3>
+                <p>Riduce efficacemente contaminanti come microplastiche, PFOA e PFOS e prodotti farmaceutici.</p>
               </div>
               <div class="specCard">
-                <h3>Rimuove efficacemente fino al</h3>
-                <p><b>99,9999%</b> dei batteri • <b>99,99%</b> dei virus • <b>99,9%</b> delle cisti.</p>
+                <h3>Riduzione microbica</h3>
+                <p><b>99,9999%</b> batteri • <b>99,99%</b> virus • <b>99,9%</b> cisti.</p>
               </div>
               <div class="specCard">
-                <h3>Trattiene i minerali benefici</h3>
-                <p>Per chi desidera acqua più pulita senza rinunciare ai minerali.</p>
+                <h3>Minerali benefici</h3>
+                <p>Trattiene i minerali benefici: acqua più pulita senza rinunciare ai minerali.</p>
               </div>
               <div class="specCard">
-                <h3>Filtro al Carbone e3</h3>
-                <p>Un Filtro al Carbone e3 può trattare fino a <b>5.000 L</b> d’acqua all’anno (in base all’uso).</p>
+                <h3>Capacità filtro (stima)</h3>
+                <p>Un filtro può trattare fino a <b>5.000 L</b> (in base all’uso).</p>
               </div>
               <div class="specCard">
-                <h3>Sostituzione filtri (modello 2-1-0)</h3>
+                <h3>Sostituzione filtri (2-1-0)</h3>
                 <p><b>2 minuti</b> • <b>1 volta all’anno</b> • <b>0 strumenti necessari</b>.</p>
               </div>
               <div class="specCard">
@@ -598,17 +598,26 @@
   const fmt1  = (n) => n.toLocaleString('it-IT', {minimumFractionDigits:1, maximumFractionDigits:1});
   const moneySigned = (n) => (n >= 0) ? fmtEUR(n) : ('-' + fmtEUR(Math.abs(n)));
 
+  function sanitizeFilename(s){
+    return (s || "").replace(/[\\/:*?"<>|]/g, "").trim();
+  }
+
   function beText(beM){
     if (beM === null) return 'Oltre 20 anni';
     if (beM < 12) return beM + ' mesi';
     return (beM/12).toLocaleString('it-IT',{maximumFractionDigits:1}) + ' anni';
   }
+
+  function beInterpretationText(beM){
+    if (beM == null) return "Nel lungo periodo il risparmio si consolida e aumenta.";
+    if (beM <= 12) return "Rientro rapido: da quel momento il risparmio è netto.";
+    if (beM <= 24) return "Rientro entro 2 anni: poi risparmio netto.";
+    return "Nel lungo periodo il risparmio si consolida e aumenta.";
+  }
+
   function setSign(el, value){
     el.classList.remove('pos','neg');
     el.classList.add(value >= 0 ? 'pos' : 'neg');
-  }
-  function sanitizeFilename(s){
-    return (s || "").replace(/[\\/:*?"<>|]/g, "").trim();
   }
 
   // ======= DOM =======
@@ -631,6 +640,7 @@
     h10: document.getElementById('h10'),
 
     breakeven: document.getElementById('breakeven'),
+    beHint: document.getElementById('beHint'),
     savePerLiter: document.getElementById('savePerLiter'),
     bottlesSavedYearBig: document.getElementById('bottlesSavedYearBig'),
     litersYearBig: document.getElementById('litersYearBig'),
@@ -724,7 +734,8 @@
   }
 
   // ======= CALCOLO + UI =======
-  let selectedHorizon = 5; // 5 o 10
+  let selectedHorizon = 5;
+
   function setHorizon(h){
     selectedHorizon = h;
     els.h5.classList.toggle('active', h===5);
@@ -733,7 +744,6 @@
     if (d && resultsWrap.style.display === "block") renderHero(d);
   }
 
-  // Campi opzionali: reveal sempre consentito
   function updateRevealButton(){
     calcBtn.disabled = false;
     calcHint.textContent = "Premi “Calcola risultati” per mostrare i risultati.";
@@ -755,12 +765,10 @@
     const litersDayTotal = litersDayDrink + cookLiters;
     const litersYear = litersDayTotal * 365;
 
-    // Bottiglie
     const yearCostB = litersYear * priceBottle;
     const cost5B = yearCostB * 5;
     const cost10B = yearCostB * 10;
 
-    // eSpring
     const yearCostE = espringConsumablesYear1(litersYear);
     const cost5E = espringTotalCost(5, litersYear);
     const cost10E = espringTotalCost(10, litersYear);
@@ -775,8 +783,9 @@
     const beM = breakEvenMonths(priceBottle, litersYear);
     const bottlesSavedYear = litersYear / 0.5;
 
-    // UI risultati (se visibili)
     els.breakeven.textContent = beText(beM);
+    els.beHint.textContent = beInterpretationText(beM);
+
     els.savePerLiter.textContent = `${fmtEUR(diffPerLiter)} /L (${percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`;
     setSign(els.savePerLiter, diffPerLiter);
 
@@ -795,7 +804,7 @@
 
     const extraFiltersYear1 = totalExtraFiltersNeeded(litersYear);
     els.capacityNote.innerHTML =
-      `Nota filtri: nel 1° anno servono <b>${extraFiltersYear1}</b> filtri aggiuntivi (0 se ≤ 5.000 L/anno). Il primo filtro è incluso nel dispositivo.`;
+      `Nota filtri: nel 1° anno servono <b>${extraFiltersYear1}</b> filtri aggiuntivi (0 se &lt;= 5.000 L/anno). Il primo filtro è incluso nel dispositivo.`;
 
     if (updateCharts && costChart && bottleChart){
       const years = Array.from({length:11}, (_,i)=>i);
@@ -837,17 +846,17 @@
       `Scenario: ${d.people} persone; bere ${d.drinkPerPerson.toLocaleString('it-IT',{maximumFractionDigits:1})} L/persona/giorno; cucina ${d.cookLiters.toLocaleString('it-IT',{maximumFractionDigits:1})} L/giorno`,
       `Prezzo bottiglie: ${d.priceBottle.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})} €/L`,
       `Consumo totale: ${fmtNum(d.litersYear)} L/anno`,
-      `Break-even: ${beText(d.beM)}`,
+      `Break-even: ${beText(d.beM)} – ${beInterpretationText(d.beM)}`,
       `Diff. €/L (media 5 anni): ${fmtEUR(d.diffPerLiter)} /L (${d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`,
       `Risparmio totale: 5 anni ${moneySigned(d.save5)} | 10 anni ${moneySigned(d.save10)}`,
       `Bottigliette 500 ml evitate/anno: ${fmtNum(d.bottlesSavedYear)}`
     ].filter(Boolean).join('\n');
   }
 
-  // ======= PDF (impaginazione anti-sovrapposizione) =======
+  // ======= PDF HELPERS =======
   async function fetchAsDataURL(url){
     const res = await fetch(url, { cache: "no-cache" });
-    if (!res.ok) throw new Error("Immagine non trovata: " + url);
+    if (!res.ok) throw new Error("Asset non trovato: " + url);
     const blob = await res.blob();
     return await new Promise((resolve, reject)=>{
       const r = new FileReader();
@@ -857,8 +866,12 @@
     });
   }
 
+  function safeText(s){
+    return String(s).replaceAll("≤", "<=");
+  }
+
   function wrap(doc, text, maxWidth){
-    return doc.splitTextToSize(String(text), maxWidth);
+    return doc.splitTextToSize(safeText(text), maxWidth);
   }
 
   function drawBox(doc, x, y, w, h, fillRgb, strokeRgb){
@@ -867,56 +880,66 @@
     doc.roundedRect(x, y, w, h, 3, 3, fillRgb ? "FD" : "S");
   }
 
-  function addSectionTitle(doc, x, y, title){
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(12);
-    doc.setTextColor(15,23,42);
-    doc.text(title, x, y);
-  }
-
-  function addKpi(doc, x, y, w, h, title, value){
-    drawBox(doc, x, y, w, h, [255,255,255], [229,231,235]);
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(9.5);
-    doc.setTextColor(75,85,99);
-    doc.text(title, x+6, y+8);
-
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(13.5);
-    doc.setTextColor(15,23,42);
-    const lines = wrap(doc, value, w-12);
-    doc.text(lines, x+6, y+18);
-  }
-
-  function addTable3(doc, x, y, colW, rows, header){
-    const [w1,w2,w3] = colW;
-    const rowH = 7;
-    const totalW = w1+w2+w3;
-
-    drawBox(doc, x, y, totalW, rowH, [248,250,252], [229,231,235]);
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(9.5);
-    doc.setTextColor(15,23,42);
-    doc.text(header[0], x+2, y+5);
-    doc.text(header[1], x+w1+w2-2, y+5, {align:"right"});
-    doc.text(header[2], x+w1+w2+w3-2, y+5, {align:"right"});
-
-    y += rowH;
+  function addAutoCallout(doc, x, y, w, text, opts = {}){
+    const padX = opts.padX ?? 6;
+    const padY = opts.padY ?? 6;
+    const fontSize = opts.fontSize ?? 9.5;
+    const lineH = opts.lineH ?? 4.4;
+    const fill = opts.fill ?? [236,253,245];
+    const stroke = opts.stroke ?? [209,250,229];
 
     doc.setFont("helvetica","normal");
-    doc.setFontSize(9.5);
+    doc.setFontSize(fontSize);
     doc.setTextColor(15,23,42);
+    if (doc.setCharSpace) doc.setCharSpace(0);
 
-    for (const r of rows){
-      drawBox(doc, x, y, totalW, rowH, [255,255,255], [229,231,235]);
-      doc.text(r[0], x+2, y+5);
-      doc.text(r[1], x+w1+w2-2, y+5, {align:"right"});
-      doc.text(r[2], x+w1+w2+w3-2, y+5, {align:"right"});
-      y += rowH;
-    }
-    return y;
+    const lines = doc.splitTextToSize(safeText(text), w - padX*2);
+    const h = padY*2 + lines.length * lineH;
+
+    doc.setDrawColor(...stroke);
+    doc.setFillColor(...fill);
+    doc.setLineWidth(0.7);
+    doc.roundedRect(x, y, w, h, 3, 3, "FD");
+
+    doc.text(lines, x + padX, y + padY + 1.6);
+    return y + h;
   }
 
+  function addContainImage(doc, dataUrl, x, y, w, h, pad = 4){
+    const props = doc.getImageProperties(dataUrl);
+    const imgW = props.width;
+    const imgH = props.height;
+
+    const boxW = w - pad*2;
+    const boxH = h - pad*2;
+
+    const scale = Math.min(boxW / imgW, boxH / imgH);
+    const drawW = imgW * scale;
+    const drawH = imgH * scale;
+
+    const dx = x + pad + (boxW - drawW) / 2;
+    const dy = y + pad + (boxH - drawH) / 2;
+
+    doc.addImage(dataUrl, "PNG", dx, dy, drawW, drawH);
+  }
+
+  function drawCheck(doc, x, y, label){
+    doc.setDrawColor(148,163,184);
+    doc.setLineWidth(0.5);
+    doc.rect(x, y-3.2, 3.6, 3.6);
+    doc.setTextColor(15,23,42);
+    doc.text(label, x+6, y);
+  }
+
+  function addFooter(doc, pageW, pageH, M, pageNo, totalPages){
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(9);
+    doc.setTextColor(148,163,184);
+    doc.text("Copia riepilogativa per il Cliente", M, pageH - 10);
+    doc.text(`Pag. ${pageNo}/${totalPages}`, pageW - M, pageH - 10, { align:"right" });
+  }
+
+  // ======= PDF GENERATION =======
   async function generatePdf(){
     const d = calc(true);
     const { jsPDF } = window.jspdf;
@@ -928,13 +951,18 @@
     const M = 14;
     const W = pageW - M*2;
 
-    // ===== PAGE 1 =====
+    // immagini (logo + certificazioni)
+    let logo = null, certImg = null;
+    try{ logo = await fetchAsDataURL("espring-logo.png"); } catch(e){}
+    try{ certImg = await fetchAsDataURL("certificazioni.png"); } catch(e){}
+
+    const totalPages = 2;
     let y = 14;
 
-    try{
-      const logo = await fetchAsDataURL("espring-logo.png");
+    // ===== PAGE 1 HEADER =====
+    if (logo){
       doc.addImage(logo, "PNG", M, y-4, 28, 0);
-    } catch(e){}
+    }
 
     doc.setFont("helvetica","bold");
     doc.setFontSize(15);
@@ -946,17 +974,23 @@
     doc.setTextColor(75,85,99);
     doc.text(`Data: ${new Date().toLocaleString("it-IT")}`, M+32, y+6);
 
+    // Riga “copia riepilogativa” (header, a destra)
+    doc.setFontSize(9);
+    doc.setTextColor(100,116,139);
+    doc.text("Copia riepilogativa per il Cliente", pageW - M, y+6, { align:"right" });
+
     const cn = (els.clientName.value || "").trim();
     const rn = (els.consultantName.value || "").trim();
     if (cn || rn){
       doc.setTextColor(15,23,42);
       doc.setFontSize(10);
-      if (cn) doc.text(`Cliente: ${cn}`, M+32, y+12);
-      if (rn) doc.text(`ABO Partner: ${rn}`, M+32, y+18);
+      if (cn) doc.text(`Cliente: ${safeText(cn)}`, M+32, y+12);
+      if (rn) doc.text(`ABO Partner: ${safeText(rn)}`, M+32, y+18);
     }
 
     y += 26;
 
+    // ===== RISPARMIO HERO =====
     drawBox(doc, M, y, W, 26, [239,246,255], [219,234,254]);
     doc.setFont("helvetica","bold");
     doc.setFontSize(10);
@@ -975,16 +1009,71 @@
 
     y += 34;
 
+    // ===== KPI ROW =====
     const gap = 6;
     const kW = (W - gap*2) / 3;
+
+    function addKpi(doc, x, y, w, h, title, value){
+      drawBox(doc, x, y, w, h, [255,255,255], [229,231,235]);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(9.5);
+      doc.setTextColor(75,85,99);
+      doc.text(title, x+6, y+8);
+
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(13.5);
+      doc.setTextColor(15,23,42);
+      const lines = wrap(doc, value, w-12);
+      doc.text(lines, x+6, y+18);
+    }
+
     addKpi(doc, M, y, kW, 24, "Break-even", beText(d.beM));
     addKpi(doc, M+kW+gap, y, kW, 24, "Diff. €/L (5 anni)", `${fmtEUR(d.diffPerLiter)} /L (${d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`);
     addKpi(doc, M+(kW+gap)*2, y, kW, 24, "Bottigliette/anno", fmtNum(d.bottlesSavedYear));
 
-    y += 32;
+    // Interpretazione rapida (sotto KPI)
+    y += 28;
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(9.5);
+    doc.setTextColor(75,85,99);
+    doc.text(wrap(doc, beInterpretationText(d.beM), W), M, y);
 
-    addSectionTitle(doc, M, y, "Scenario e costi (sintesi)");
+    y += 10;
+
+    // ===== TABELLINA SINTESI =====
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(12);
+    doc.setTextColor(15,23,42);
+    doc.text("Scenario e costi (sintesi)", M, y);
     y += 6;
+
+    function addTable3(doc, x, y, colW, rows, header){
+      const [w1,w2,w3] = colW;
+      const rowH = 7;
+      const totalW = w1+w2+w3;
+
+      drawBox(doc, x, y, totalW, rowH, [248,250,252], [229,231,235]);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(9.5);
+      doc.setTextColor(15,23,42);
+      doc.text(header[0], x+2, y+5);
+      doc.text(header[1], x+w1+w2-2, y+5, {align:"right"});
+      doc.text(header[2], x+w1+w2+w3-2, y+5, {align:"right"});
+      y += rowH;
+
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(9.5);
+      doc.setTextColor(15,23,42);
+
+      for (const r of rows){
+        drawBox(doc, x, y, totalW, rowH, [255,255,255], [229,231,235]);
+        doc.text(safeText(r[0]), x+2, y+5);
+        doc.text(safeText(r[1]), x+w1+w2-2, y+5, {align:"right"});
+        doc.text(safeText(r[2]), x+w1+w2+w3-2, y+5, {align:"right"});
+        y += rowH;
+      }
+      return y;
+    }
 
     const colW = [92, 45, 45];
     const rows = [
@@ -999,136 +1088,92 @@
     y = addTable3(doc, M, y, colW, rows, ["Voce", "Bottiglie", "eSpring"]);
     y += 6;
 
-    const note = `Nota filtri: nel 1° anno servono ${d.extraFiltersYear1} filtri aggiuntivi (0 se ≤ 5.000 L/anno). Il primo filtro è incluso nel dispositivo.`;
-    drawBox(doc, M, y, W, 16, [236,253,245], [209,250,229]);
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(9.5);
-    doc.setTextColor(15,23,42);
-    doc.text(wrap(doc, note, W-12), M+6, y+6);
-    y += 22;
+    // ===== NOTE FILTRI (AUTO-WRAP) =====
+    const note = `Nota filtri: nel 1° anno servono ${d.extraFiltersYear1} filtri aggiuntivi (0 se <= 5.000 L/anno). Il primo filtro è incluso nel dispositivo.`;
+    y = addAutoCallout(doc, M, y, W, note, {
+      fill: [236,253,245],
+      stroke: [209,250,229],
+      fontSize: 9.5,
+      lineH: 4.4,
+      padX: 6,
+      padY: 6
+    });
+    y += 8;
 
-    addSectionTitle(doc, M, y, "Prestazioni & certificazioni (sintesi)");
-    y += 6;
-
-    const bGap = 6;
-    const bW = (W - bGap) / 2;
-    const bH = 18;
-
-    function miniCard(x, y, title, body){
-      drawBox(doc, x, y, bW, bH, [255,255,255], [229,231,235]);
-      doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(15,23,42);
-      doc.text(title, x+5, y+7);
-      doc.setFont("helvetica","normal"); doc.setFontSize(9.2); doc.setTextColor(75,85,99);
-      doc.text(wrap(doc, body, bW-10), x+5, y+13);
-    }
-
-    miniCard(M, y, "170+ contaminanti", "Tra cui microplastiche, PFOA e PFOS e prodotti farmaceutici.");
-    miniCard(M+bW+bGap, y, "Riduzione microbica", "Fino a 99,9999% batteri • 99,99% virus • 99,9% cisti.");
-    y += bH + 6;
-    miniCard(M, y, "Minerali benefici", "Trattiene i minerali benefici.");
-    miniCard(M+bW+bGap, y, "Filtro al Carbone e3", "Può trattare fino a 5.000 L/anno (in base all’uso).");
-    y += bH + 8;
-
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(9.5);
-    doc.setTextColor(75,85,99);
-    doc.text("Documenti: prestazioni-espring.pdf • Infografica-Generale-eSpring.pdf", M, y);
-
-    doc.setFontSize(9);
-    doc.setTextColor(107,114,128);
-    doc.text("Simulazione basata sui parametri inseriti e sui prezzi impostati nel calcolatore. Non sostituisce documentazione ufficiale.", M, pageH-12);
-
-    // ===== PAGE 2 =====
-    doc.addPage();
-    let y2 = 14;
-
+    // ===== CLOSING FORTE (PAGINA 1) =====
+    drawBox(doc, M, y, W, 30, [239,246,255], [59,130,246]);
     doc.setFont("helvetica","bold");
-    doc.setFontSize(14);
+    doc.setFontSize(11);
     doc.setTextColor(15,23,42);
-    doc.text("Report grafici", M, y2);
+    doc.text("Prossimo passo", M+6, y+8);
 
     doc.setFont("helvetica","normal");
     doc.setFontSize(10);
+    doc.setTextColor(15,23,42);
+    doc.text(wrap(doc, "Se lo scenario ti torna, definiamo modalità d’acquisto e pianifichiamo l’installazione.", W-12), M+6, y+14);
+
+    doc.setFontSize(10);
+    drawCheck(doc, M+6, y+24, "Acquisto in unica soluzione");
+    drawCheck(doc, M+72, y+24, "Rate (3 / 6 / 12 / 24)");
+
+    // Footer pagina 1
+    addFooter(doc, pageW, pageH, M, 1, totalPages);
+
+    // ===== PAGE 2 =====
+    doc.addPage();
+    let y2 = 16;
+
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(13);
+    doc.setTextColor(15,23,42);
+    doc.text("Allegati visivi", M, y2);
+
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(9.5);
     doc.setTextColor(75,85,99);
-    doc.text(`Break-even: ${beText(d.beM)} • Risparmio 5 anni: ${moneySigned(d.save5)} • Risparmio 10 anni: ${moneySigned(d.save10)}`, M, y2+7);
+    doc.text("Grafici e certificazioni (estratto visivo). Dettagli nei PDF ufficiali.", M, y2+6);
 
     y2 += 14;
 
-    let costImg = null, bottleImg = null;
+    // Grafico costi (se disponibile)
+    let costImg = null;
     try{ costImg = costChart.toBase64Image(); } catch(e){}
-    try{ bottleImg = bottleChart.toBase64Image(); } catch(e){}
-
     const topChartH = 70;
-    const halfW = (W - 8) / 2;
 
+    drawBox(doc, M, y2, W, topChartH, [255,255,255], [229,231,235]);
     if (costImg){
-      drawBox(doc, M, y2, W, topChartH, [255,255,255], [229,231,235]);
       doc.addImage(costImg, "PNG", M+4, y2+6, W-8, topChartH-12);
     } else {
-      drawBox(doc, M, y2, W, topChartH, [255,255,255], [229,231,235]);
       doc.setFontSize(10); doc.setTextColor(107,114,128);
       doc.text("Grafico costi non disponibile.", M+6, y2+12);
     }
     y2 += topChartH + 10;
 
-    if (bottleImg){
-      drawBox(doc, M, y2, halfW, 55, [255,255,255], [229,231,235]);
-      doc.addImage(bottleImg, "PNG", M+4, y2+6, halfW-8, 55-12);
-    } else {
-      drawBox(doc, M, y2, halfW, 55, [255,255,255], [229,231,235]);
-      doc.setFontSize(10); doc.setTextColor(107,114,128);
-      doc.text("Grafico bottigliette non disponibile.", M+6, y2+12);
-    }
-
-    drawBox(doc, M+halfW+8, y2, halfW, 55, [255,255,255], [229,231,235]);
-    doc.setFont("helvetica","bold"); doc.setFontSize(11); doc.setTextColor(15,23,42);
-    doc.text("Costo cumulato (stima)", M+halfW+12, y2+10);
-
-    doc.setFont("helvetica","normal"); doc.setFontSize(9.5); doc.setTextColor(15,23,42);
-    const tx = M+halfW+12, ty = y2+18;
-    doc.text("Anno", tx, ty);
-    doc.text("Bottiglie", tx+52, ty, {align:"right"});
-    doc.text("eSpring", tx+halfW-10, ty, {align:"right"});
-
-    const row = (yy, anno, b, e)=>{
-      doc.setTextColor(75,85,99);
-      doc.text(String(anno), tx, yy);
-      doc.setTextColor(15,23,42);
-      doc.text(b, tx+52, yy, {align:"right"});
-      doc.text(e, tx+halfW-10, yy, {align:"right"});
-    };
-    row(ty+8, 1, fmtEUR(d.yearCostB), fmtEUR(ESPRING_DEVICE + totalExtraFiltersNeeded(d.litersYear)*ESPRING_FILTER));
-    row(ty+16, 3, fmtEUR(d.yearCostB*3), fmtEUR(espringTotalCost(3, d.litersYear)));
-    row(ty+24, 5, fmtEUR(d.cost5B), fmtEUR(d.cost5E));
-    row(ty+32, 10, fmtEUR(d.cost10B), fmtEUR(d.cost10E));
-
-    y2 += 55 + 12;
-
+    // Certificazioni “dossier”
     doc.setFont("helvetica","bold");
-    doc.setFontSize(13);
+    doc.setFontSize(12);
     doc.setTextColor(15,23,42);
     doc.text("Certificazioni (dossier)", M, y2);
     y2 += 6;
 
-    let certImg = null;
-    try{ certImg = await fetchAsDataURL("certificazioni.png"); } catch(e){}
-
-    if (certImg){
-      const availH = pageH - y2 - 18;
-      drawBox(doc, M, y2, W, availH, [255,255,255], [229,231,235]);
-      doc.addImage(certImg, "PNG", M+2, y2+2, W-4, availH-4);
-    } else {
-      drawBox(doc, M, y2, W, 40, [255,255,255], [229,231,235]);
-      doc.setFont("helvetica","normal");
-      doc.setFontSize(10);
-      doc.setTextColor(107,114,128);
-      doc.text("certificazioni.png non disponibile nella cartella.", M+6, y2+14);
-    }
+    const availH = pageH - y2 - 18;
+    drawBox(doc, M, y2, W, availH, [255,255,255], [229,231,235]);
 
     doc.setFont("helvetica","normal");
     doc.setFontSize(9.5);
     doc.setTextColor(75,85,99);
-    doc.text("Suggerimento: conserva questo PDF come riepilogo della consulenza.", M, pageH-12);
+    doc.text("Estratto visivo – dettagli completi nei documenti ufficiali.", M+6, y2+8);
+
+    if (certImg){
+      // area immagine sotto al testo
+      addContainImage(doc, certImg, M, y2+10, W, availH-12, 6);
+    } else {
+      doc.setFontSize(10); doc.setTextColor(107,114,128);
+      doc.text("certificazioni.png non disponibile nella cartella.", M+6, y2+20);
+    }
+
+    // Footer pagina 2
+    addFooter(doc, pageW, pageH, M, 2, totalPages);
 
     // ===== OUTPUT =====
     const baseName = sanitizeFilename(els.clientName.value) || "Cliente";
@@ -1138,7 +1183,7 @@
     const file = new File([blob], fname, { type: "application/pdf" });
     const blobUrl = URL.createObjectURL(blob);
 
-    // Share (mobile)
+    // Share (mobile) + fallback download
     try{
       if (navigator.canShare && navigator.canShare({ files: [file] })){
         await navigator.share({
@@ -1150,18 +1195,16 @@
       }
     } catch(e){}
 
-    // Download link (più compatibile)
     try{
       const a = document.createElement("a");
       a.href = blobUrl;
-      a.download = fname;         // forza download se il browser lo permette
+      a.download = fname;
       a.target = "_blank";
       a.rel = "noopener noreferrer";
       document.body.appendChild(a);
       a.click();
       a.remove();
     } catch(e){
-      // fallback tab/download classico
       try{ doc.save(fname); } catch(err){}
     } finally {
       setTimeout(()=> URL.revokeObjectURL(blobUrl), 20000);
@@ -1182,7 +1225,7 @@
     resultsWrap.style.display = "block";
     enablePostActions();
 
-    // micro-animazione: reset + play
+    // micro-animazione
     resultsWrap.classList.remove("revealAnim");
     void resultsWrap.offsetWidth;
     resultsWrap.classList.add("revealAnim");
