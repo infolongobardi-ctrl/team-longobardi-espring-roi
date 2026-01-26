@@ -10,6 +10,7 @@
     :root{
       --bg0:#070A0F;
       --bg1:#0B1220;
+      --card:#0F172A;
       --text:#E5E7EB;
       --muted:#9CA3AF;
       --line:rgba(255,255,255,.10);
@@ -33,17 +34,14 @@
     a{color:var(--brand2);text-decoration:none}
     a:hover{text-decoration:underline}
     .wrap{max-width:1180px;margin:0 auto;padding:22px}
-
     .topbar{
       display:flex;align-items:center;justify-content:space-between;gap:12px;
-      margin-bottom:14px;
-      flex-wrap:wrap;
+      margin-bottom:14px; flex-wrap:wrap;
     }
     .brandline{display:flex;align-items:center;gap:10px}
     .brandline img{width:34px;height:34px;border-radius:10px;background:#fff;padding:6px}
     .brandline .t1{font-weight:950;letter-spacing:.2px}
     .brandline .t2{color:var(--muted);font-size:12.5px;margin-top:2px}
-
     .miniLinks{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
     .miniBtn{
       display:inline-flex;align-items:center;gap:8px;
@@ -55,8 +53,8 @@
       white-space:nowrap;
     }
     .miniBtn:hover{filter:brightness(1.05);text-decoration:none}
-    .miniBtn.primary{border-color:rgba(16,185,129,.35); background:rgba(16,185,129,.12)}
-    .miniBtn.secondary{border-color:rgba(56,189,248,.35); background:rgba(56,189,248,.12)}
+    .miniBtn.primary{border-color:rgba(16,185,129,.35); background:rgba(16,185,129,.10)}
+    .miniBtn.secondary{border-color:rgba(56,189,248,.35); background:rgba(56,189,248,.10)}
 
     .grid{display:grid;grid-template-columns: 1.25fr .95fr; gap:14px;}
     @media (max-width: 980px){.grid{grid-template-columns:1fr}}
@@ -128,6 +126,7 @@
     .val{font-variant-numeric: tabular-nums; color:var(--brand2); font-weight:950}
     input[type=range]{width:100%}
     .rangeMeta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:6px}
+    .divider{height:1px;background:rgba(255,255,255,.10);margin:14px 0}
 
     .cta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
     .cta2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
@@ -170,7 +169,6 @@
 
     .resultsWrap{display:none}
     .resultsWrap.show{display:block}
-
     .bigSave{
       border-radius:18px;
       border:1px solid rgba(56,189,248,.22);
@@ -220,21 +218,17 @@
     .kpi .n.good{color:#A7F3D0}
     .kpi .s{color:var(--muted);font-size:12px;margin-top:7px;line-height:1.35}
 
+    .charts{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
     .chartCard{
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;background:rgba(0,0,0,.18);
-      padding:14px;margin-top:12px;
+      padding:14px;
       box-shadow: var(--shadow2);
     }
     .chartTitle{font-weight:1000;font-size:13px}
-    .chartBox{
-      height:240px;
-      max-height:240px;
-      margin-top:10px;
-      position:relative;
-    }
-    /* FIX “grafico infinito” su mobile: niente height:100% forzato */
-    canvas{display:block; width:100% !important; height:240px !important; max-height:240px !important}
+    .chartBox{height:240px;margin-top:10px}
+    /* IMPORTANT: non forzare height:100% sul canvas (su iOS può “impazzire”) */
+    canvas{max-width:100%;display:block}
 
     table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.10);margin-top:12px}
     th,td{padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px}
@@ -271,8 +265,12 @@
       box-shadow: var(--shadow2);
     }
     .certEnd img{width:100%;height:auto;display:block}
-
     .spacer{height:10px}
+    @media print{
+      .miniLinks, .cta, .cta2, #btnCalc, #btnPdf, #btnCopy, #btnShare { display:none !important; }
+      body{background:#fff;color:#000}
+      .card{box-shadow:none}
+    }
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -290,6 +288,7 @@
         </div>
       </div>
 
+      <!-- iOS non ama "download": meglio aprire in tab -->
       <div class="miniLinks">
         <a class="miniBtn secondary" href="Infografica-Generale-eSpring.pdf" target="_blank" rel="noopener">Apri infografica (PDF)</a>
         <a class="miniBtn primary" href="prestazioni-espring.pdf" target="_blank" rel="noopener">Apri prestazioni (PDF)</a>
@@ -398,7 +397,6 @@
         <div class="hint">Dopo “Calcola risultati” compaiono numeri, grafici e riepilogo.</div>
       </div>
       <div class="bd">
-
         <div class="bigSave">
           <div class="bigSaveTop">
             <div class="bigSaveTitle">RISPARMIO TOTALE STIMATO (BOTTIGLIE – eSPRING)</div>
@@ -434,11 +432,13 @@
           </div>
         </div>
 
-        <div class="chartCard">
-          <div class="chartTitle">Costo cumulato (0–10 anni)</div>
-          <div class="hint">Confronto costi totali cumulati nel tempo.</div>
-          <div class="chartBox">
-            <canvas id="costChart"></canvas>
+        <div class="charts">
+          <div class="chartCard">
+            <div class="chartTitle">Costo cumulato (0–10 anni)</div>
+            <div class="hint">Confronto costi totali cumulati nel tempo.</div>
+            <div class="chartBox">
+              <canvas id="costChart"></canvas>
+            </div>
           </div>
         </div>
 
@@ -506,7 +506,6 @@
         <div class="certEnd">
           <img src="certificazioni.png" alt="Certificazioni eSpring" />
         </div>
-
       </div>
     </section>
   </div>
@@ -515,8 +514,8 @@
   /********************
    * LISTINO / MODELLO
    ********************/
-  const ESPRING_DEVICE = 1516.77; // dispositivo (include 1 filtro)
-  const ESPRING_FILTER = 287.24;  // ricambio filtro+prefiltro
+  const ESPRING_DEVICE = 1516.77;
+  const ESPRING_FILTER = 287.24;
   const FILTER_CAPACITY_L = 5000;
   const MAX_BE_MONTHS = 240;
 
@@ -525,8 +524,12 @@
    ********************/
   const fmtEUR = (n) => n.toLocaleString('it-IT', {style:'currency', currency:'EUR'});
   const fmtNum = (n) => n.toLocaleString('it-IT', {maximumFractionDigits: 0});
-  const fmt1 = (n) => n.toLocaleString('it-IT', {minimumFractionDigits:1, maximumFractionDigits:1});
-  const fmt2 = (n) => n.toLocaleString('it-IT', {minimumFractionDigits:2, maximumFractionDigits:2});
+  const fmt1  = (n) => n.toLocaleString('it-IT', {minimumFractionDigits:1, maximumFractionDigits:1});
+  const fmt2  = (n) => n.toLocaleString('it-IT', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  function isIOS(){
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  }
 
   function beTextMonths(m){
     if (m === null) return 'Oltre 20 anni';
@@ -537,13 +540,16 @@
   function totalExtraFiltersNeeded(totalLiters){
     return Math.max(0, Math.ceil(totalLiters / FILTER_CAPACITY_L) - 1);
   }
+
   function espringTotalCost(years, litersYear){
     const liters = litersYear * years;
     return ESPRING_DEVICE + totalExtraFiltersNeeded(liters) * ESPRING_FILTER;
   }
+
   function espringConsumablesYear1(litersYear){
     return totalExtraFiltersNeeded(litersYear) * ESPRING_FILTER;
   }
+
   function breakEvenMonthsDeviceOnly(priceBottle, litersYear){
     const litersMonth = litersYear / 12;
     for(let m=1; m<=MAX_BE_MONTHS; m++){
@@ -599,16 +605,19 @@
     capacityNote: document.getElementById('capacityNote'),
   };
 
-  let costChart;
+  let costChart = null;
   let horizonYears = 5;
   let hasInteracted = false;
   let lastData = null;
 
-  /********************
-   * CHART
-   ********************/
-  function buildChart(){
+  function buildChartIfNeeded(){
+    if (costChart) return;
+
     const ctx = document.getElementById('costChart');
+    // Imposta dimensione base “sana” prima di Chart.js (evita comportamenti strani su iOS)
+    ctx.width = 900;
+    ctx.height = 360;
+
     costChart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -621,10 +630,12 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } },
+        plugins: {
+          legend: { position: 'bottom', labels: { color: 'rgba(229,231,235,.85)' } }
+        },
         scales: {
-          x: { title:{ display:true, text:'Anni' } },
-          y: { title:{ display:true, text:'Costo totale (€)' } }
+          x: { ticks: { color:'rgba(229,231,235,.70)' }, grid: { color:'rgba(255,255,255,.06)' }, title:{ display:true, text:'Anni', color:'rgba(229,231,235,.75)' } },
+          y: { ticks: { color:'rgba(229,231,235,.70)' }, grid: { color:'rgba(255,255,255,.06)' }, title:{ display:true, text:'Costo totale (€)', color:'rgba(229,231,235,.75)' } }
         }
       }
     });
@@ -689,7 +700,6 @@
     els.breakeven.textContent = beTextMonths(d.beDeviceM);
     els.savePerLiter.textContent =
       `${fmtEUR(d.diffPerLiter)} /L (${d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`;
-
     els.bottlesYear.textContent = fmtNum(d.bottlesSavedYear);
     els.litersYearOut.textContent = fmtNum(d.litersYear) + ' L/anno';
 
@@ -705,13 +715,17 @@
     els.capacityNote.innerHTML =
       `Nota filtri: nel 1° anno servono <b>${d.extraFiltersYear1}</b> filtri aggiuntivi (0 se ≤ 5.000 L/anno). Il primo filtro è incluso nel dispositivo.`;
 
-    const years = Array.from({length:11}, (_,i)=>i);
-    const bottleCum = years.map(y => d.yearCostB * y);
-    const espringCum = years.map(y => (y===0 ? 0 : espringTotalCost(y, d.litersYear)));
-
-    costChart.data.datasets[0].data = bottleCum;
-    costChart.data.datasets[1].data = espringCum;
-    costChart.update('none');
+    // Chart (solo se esiste)
+    if (costChart){
+      const years = Array.from({length:11}, (_,i)=>i);
+      const bottleCum = years.map(y => d.yearCostB * y);
+      const espringCum = years.map(y => (y===0 ? 0 : espringTotalCost(y, d.litersYear)));
+      costChart.data.datasets[0].data = bottleCum;
+      costChart.data.datasets[1].data = espringCum;
+      costChart.update();
+      // resize “post show” per iOS
+      requestAnimationFrame(()=> costChart.resize());
+    }
   }
 
   function ensureButtonsState(){
@@ -725,6 +739,9 @@
     }
   }
 
+  /********************
+   * SUMMARY / SHARE
+   ********************/
   function summary(d){
     const be = beTextMonths(d.beDeviceM);
     return [
@@ -740,36 +757,171 @@
   }
 
   /********************
-   * PDF (2 pagine “bello” + download robusto)
+   * PDF helpers (robusti su iOS/Firefox)
    ********************/
-  async function fetchAsDataURL(url){
-    const res = await fetch(url, { cache: "no-store" });
-    if (!res.ok) throw new Error("Impossibile caricare: " + url);
-    const blob = await res.blob();
-    return new Promise((resolve, reject)=>{
-      const r = new FileReader();
-      r.onload = ()=> resolve(r.result);
-      r.onerror = reject;
-      r.readAsDataURL(blob);
+  function fitBox(iw, ih, maxW, maxH){
+    const s = Math.min(maxW/iw, maxH/ih);
+    return { w: iw*s, h: ih*s, s };
+  }
+
+  async function loadImageAsDataURL(src){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement("canvas");
+        c.width = img.naturalWidth;
+        c.height = img.naturalHeight;
+        c.getContext("2d").drawImage(img, 0, 0);
+        resolve({ dataUrl: c.toDataURL("image/png"), w: img.naturalWidth, h: img.naturalHeight });
+      };
+      img.onerror = reject;
+      img.src = src;
     });
   }
 
-  function fitBox(iw, ih, maxW, maxH){
-    const s = Math.min(maxW/iw, maxH/ih);
-    return { w: iw*s, h: ih*s };
+  function openPdfBlob(doc, filename){
+    const blob = doc.output("blob");
+    const url = URL.createObjectURL(blob);
+
+    // iOS spesso blocca "download": meglio aprire il PDF in tab (poi condividi/salva)
+    if (isIOS()){
+      window.location.href = url;
+      setTimeout(()=>URL.revokeObjectURL(url), 15000);
+      return;
+    }
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{
+      URL.revokeObjectURL(url);
+      a.remove();
+    }, 15000);
   }
 
+  /********************
+   * PDF chart (deterministico, NON dipende da Chart.js)
+   ********************/
+  function makePdfChartPng(d){
+    const w = 1200, h = 520;
+    const c = document.createElement("canvas");
+    c.width = w; c.height = h;
+    const g = c.getContext("2d");
+
+    // background
+    g.fillStyle = "#ffffff";
+    g.fillRect(0,0,w,h);
+
+    // plot area
+    const padL=90, padR=40, padT=50, padB=70;
+    const pw = w-padL-padR;
+    const ph = h-padT-padB;
+
+    // data
+    const years = Array.from({length:11}, (_,i)=>i);
+    const bottle = years.map(y => d.yearCostB * y);
+    const espring = years.map(y => (y===0?0:espringTotalCost(y, d.litersYear)));
+    const maxY = Math.max(...bottle, ...espring) * 1.08;
+
+    // axes
+    g.strokeStyle = "rgba(0,0,0,.20)";
+    g.lineWidth = 2;
+    g.beginPath();
+    g.moveTo(padL, padT);
+    g.lineTo(padL, padT+ph);
+    g.lineTo(padL+pw, padT+ph);
+    g.stroke();
+
+    // grid Y
+    g.strokeStyle = "rgba(0,0,0,.08)";
+    g.lineWidth = 1;
+    const ticks = 5;
+    for(let i=0;i<=ticks;i++){
+      const yy = padT + ph*(i/ticks);
+      g.beginPath();
+      g.moveTo(padL, yy);
+      g.lineTo(padL+pw, yy);
+      g.stroke();
+    }
+
+    // labels
+    g.fillStyle = "rgba(0,0,0,.75)";
+    g.font = "28px Arial";
+    g.fillText("Costo cumulato (0–10 anni)", padL, 34);
+
+    g.font = "22px Arial";
+    g.fillText("Anni", padL+pw/2-20, padT+ph+55);
+
+    // y labels
+    g.font = "20px Arial";
+    for(let i=0;i<=ticks;i++){
+      const val = maxY * (1 - i/ticks);
+      const yy = padT + ph*(i/ticks);
+      g.fillText(Math.round(val).toLocaleString("it-IT")+" €", 10, yy+6);
+    }
+
+    // x labels
+    for(let i=0;i<years.length;i++){
+      const x = padL + pw*(i/(years.length-1));
+      g.fillText(String(years[i]), x-6, padT+ph+30);
+    }
+
+    function toXY(arr, idx){
+      const x = padL + pw*(idx/(arr.length-1));
+      const y = padT + ph*(1 - (arr[idx]/maxY));
+      return {x,y};
+    }
+
+    // line bottle (blu)
+    g.strokeStyle = "rgba(56,189,248,.95)";
+    g.lineWidth = 6;
+    g.beginPath();
+    for(let i=0;i<bottle.length;i++){
+      const p = toXY(bottle,i);
+      if (i===0) g.moveTo(p.x,p.y); else g.lineTo(p.x,p.y);
+    }
+    g.stroke();
+
+    // line espring (verde)
+    g.strokeStyle = "rgba(16,185,129,.95)";
+    g.lineWidth = 6;
+    g.beginPath();
+    for(let i=0;i<espring.length;i++){
+      const p = toXY(espring,i);
+      if (i===0) g.moveTo(p.x,p.y); else g.lineTo(p.x,p.y);
+    }
+    g.stroke();
+
+    // legend
+    g.fillStyle = "rgba(56,189,248,.95)";
+    g.fillRect(padL, h-40, 28, 10);
+    g.fillStyle = "rgba(0,0,0,.75)";
+    g.fillText("Bottiglie", padL+40, h-32);
+
+    g.fillStyle = "rgba(16,185,129,.95)";
+    g.fillRect(padL+220, h-40, 28, 10);
+    g.fillStyle = "rgba(0,0,0,.75)";
+    g.fillText("eSpring", padL+260, h-32);
+
+    return c.toDataURL("image/png");
+  }
+
+  /********************
+   * PDF (2 pagine “bello”)
+   ********************/
   async function generatePdf(){
     if (!lastData){
       const d0 = calcCore();
       horizonYears = 5;
+      els.resultsWrap.classList.add('show');
+      buildChartIfNeeded();
       renderResults(d0);
       lastData = d0;
-      els.resultsWrap.classList.add('show');
+      await new Promise(r => requestAnimationFrame(r));
     }
-
-    // lascia stabilizzare il chart
-    await new Promise(r => requestAnimationFrame(()=>r()));
 
     const d = lastData;
     const { jsPDF } = window.jspdf;
@@ -783,15 +935,12 @@
     const abo = (els.aboName.value || '').trim();
     const client = (els.clientName.value || '').trim();
 
-    // immagini
-    let logoData = null;
-    let certData = null;
-    try { logoData = await fetchAsDataURL("espring-logo.png"); } catch(e){}
-    try { certData = await fetchAsDataURL("certificazioni.png"); } catch(e){}
+    let logo = null;
+    try { logo = await loadImageAsDataURL("espring-logo.png"); } catch(e){}
 
-    // ====== PAG 1 ======
-    if (logoData){
-      doc.addImage(logoData, "PNG", M, 10, 18, 18);
+    // PAGE 1
+    if (logo){
+      doc.addImage(logo.dataUrl, "PNG", M, 10, 18, 18);
     }
     doc.setFont("helvetica","bold");
     doc.setFontSize(16);
@@ -801,11 +950,10 @@
     doc.setFontSize(10);
     doc.text(`Data: ${new Date().toLocaleString("it-IT")}    Copia riepilogativa per il Cliente`, M + 24, 24);
 
-    // box KPI
     const boxX = M, boxY = 34, boxW = pageW - (M*2), boxH = 44;
     doc.setDrawColor(56,189,248);
     doc.setLineWidth(0.6);
-    doc.roundedRect(boxX, boxY, boxW, boxH, 3, 3, "S");
+    doc.roundedRect ? doc.roundedRect(boxX, boxY, boxW, boxH, 3, 3, 'S') : doc.rect(boxX, boxY, boxW, boxH);
 
     doc.setFont("helvetica","bold");
     doc.setFontSize(12);
@@ -821,28 +969,23 @@
     doc.setFontSize(11);
     doc.text(`Orizzonte selezionato: ${horizonYears} anni`, boxX + 6, boxY + 36);
 
-    // KPI destra (spaziati: niente sovrapposizioni)
-    const kx = boxX + boxW*0.60;
-    let ky = boxY + 14;
-
-    doc.setFont("helvetica","bold"); doc.setFontSize(11);
+    const kx = boxX + boxW*0.58, ky = boxY + 14;
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
     doc.text("Break-even", kx, ky);
     doc.setFont("helvetica","normal");
     doc.text(beTextMonths(d.beDeviceM), kx, ky + 6);
 
-    ky += 16;
     doc.setFont("helvetica","bold");
-    doc.text("Diff. €/L (5 anni)", kx, ky);
+    doc.text("Diff. €/L (5 anni)", kx, ky + 16);
     doc.setFont("helvetica","normal");
-    doc.text(`${fmtEUR(d.diffPerLiter)} /L (${d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`, kx, ky + 6);
+    doc.text(`${fmtEUR(d.diffPerLiter)} /L (${d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`, kx, ky + 22);
 
-    ky += 16;
     doc.setFont("helvetica","bold");
-    doc.text("Bottigliette/anno", kx, ky);
+    doc.text("Bottigliette/anno", kx, ky + 32);
     doc.setFont("helvetica","normal");
-    doc.text(fmtNum(d.bottlesSavedYear), kx, ky + 6);
+    doc.text(fmtNum(d.bottlesSavedYear), kx, ky + 38);
 
-    // scenario
     let y = boxY + boxH + 14;
     doc.setFont("helvetica","bold");
     doc.setFontSize(12);
@@ -870,8 +1013,7 @@
       ["Totale 10 anni", fmtEUR(d.cost10B), fmtEUR(d.cost10E)],
     ];
 
-    const tx = M;
-    const col1 = tw*0.52, col2 = tw*0.24, col3 = tw*0.24;
+    const tx = M, col1 = tw*0.50, col2 = tw*0.25, col3 = tw*0.25;
 
     doc.setFont("helvetica","bold");
     doc.setFillColor(240,248,255);
@@ -909,13 +1051,20 @@
     doc.setFontSize(10.5);
     doc.text("Se lo scenario ti torna, definiamo modalità d’acquisto e pianifichiamo l’installazione.", M, y, { maxWidth: tw });
 
+    y += 10;
+    doc.setFont("helvetica","bold");
+    doc.text("Acquisto in unica soluzione", M, y);
+    doc.setFont("helvetica","normal");
+    doc.text("   •   Rate (3 / 6 / 12 / 24)", M + 60, y);
+
     doc.setFontSize(9);
     doc.setTextColor(120,120,120);
     doc.text("Copia riepilogativa per il Cliente", M, pageH - 10);
     doc.text("Pag. 1/2", pageW - M, pageH - 10, { align: "right" });
 
-    // ====== PAG 2 ======
+    // PAGE 2
     doc.addPage();
+
     doc.setTextColor(0,0,0);
     doc.setFont("helvetica","bold");
     doc.setFontSize(13);
@@ -925,24 +1074,26 @@
     doc.setTextColor(80,80,80);
     doc.text("Grafico e certificazioni (estratto visivo). Dettagli nei PDF ufficiali.", M, 24);
 
-    // Grafico immagine (fit corretto)
-    const chartCanvas = document.getElementById('costChart');
-    const chartImg = chartCanvas.toDataURL("image/png", 1.0);
-
+    // Grafico “PDF-safe”
+    const chartImg = makePdfChartPng(d);
     const chartBoxX = M, chartBoxY = 32, chartBoxW = tw, chartBoxH = 70;
     doc.setDrawColor(210,220,230);
     doc.setLineWidth(0.6);
-    doc.roundedRect(chartBoxX, chartBoxY, chartBoxW, chartBoxH, 3, 3, "S");
+    doc.roundedRect ? doc.roundedRect(chartBoxX, chartBoxY, chartBoxW, chartBoxH, 3,3,'S') : doc.rect(chartBoxX, chartBoxY, chartBoxW, chartBoxH);
 
-    const pad = 4;
-    const iw = chartCanvas.width || 1200;
-    const ih = chartCanvas.height || 600;
-    const f1 = fitBox(iw, ih, chartBoxW - pad*2, chartBoxH - pad*2);
-    const imgX = chartBoxX + (chartBoxW - f1.w)/2;
-    const imgY = chartBoxY + (chartBoxH - f1.h)/2;
-    doc.addImage(chartImg, "PNG", imgX, imgY, f1.w, f1.h);
+    // Immagine già proporzionata (1200x520)
+    const fittedChart = fitBox(1200, 520, chartBoxW - 8, chartBoxH - 8);
+    doc.addImage(
+      chartImg, "PNG",
+      chartBoxX + (chartBoxW - fittedChart.w)/2,
+      chartBoxY + (chartBoxH - fittedChart.h)/2,
+      fittedChart.w, fittedChart.h
+    );
 
     // Certificazioni
+    let cert = null;
+    try { cert = await loadImageAsDataURL("certificazioni.png"); } catch(e){}
+
     doc.setTextColor(0,0,0);
     doc.setFont("helvetica","bold");
     doc.setFontSize(12);
@@ -955,17 +1106,16 @@
 
     const certBoxX = M, certBoxY = chartBoxY + chartBoxH + 28, certBoxW = tw, certBoxH = pageH - certBoxY - 18;
     doc.setDrawColor(210,220,230);
-    doc.roundedRect(certBoxX, certBoxY, certBoxW, certBoxH, 3, 3, "S");
+    doc.roundedRect ? doc.roundedRect(certBoxX, certBoxY, certBoxW, certBoxH, 3,3,'S') : doc.rect(certBoxX, certBoxY, certBoxW, certBoxH);
 
-    if (certData){
-      // non abbiamo size reale, stimiamo con ratio “verticale” e lasciamo fit in altezza
-      // (jsPDF addImage gestisce bene comunque col fitBox basato su box)
-      // Per un fit migliore, usiamo un ratio standard 3:4 (va benissimo su certificazioni.png)
-      const approxW = 1200, approxH = 1600;
-      const f2 = fitBox(approxW, approxH, certBoxW - pad*2, certBoxH - pad*2);
-      const cx = certBoxX + (certBoxW - f2.w)/2;
-      const cy = certBoxY + (certBoxH - f2.h)/2;
-      doc.addImage(certData, "PNG", cx, cy, f2.w, f2.h);
+    if (cert){
+      const f2 = fitBox(cert.w, cert.h, certBoxW - 8, certBoxH - 8);
+      doc.addImage(
+        cert.dataUrl, "PNG",
+        certBoxX + (certBoxW - f2.w)/2,
+        certBoxY + (certBoxH - f2.h)/2,
+        f2.w, f2.h
+      );
     } else {
       doc.setTextColor(120,120,120);
       doc.text("Immagine certificazioni non trovata (certificazioni.png).", certBoxX + 6, certBoxY + 10);
@@ -976,16 +1126,8 @@
     doc.text("Copia riepilogativa per il Cliente", M, pageH - 10);
     doc.text("Pag. 2/2", pageW - M, pageH - 10, { align: "right" });
 
-    // ====== DOWNLOAD ROBUSTO (Safari/Firefox) ======
     const fname = `Preventivo-ROI-eSpring-Cliente-${new Date().toISOString().slice(0,10)}.pdf`;
-    const blob = doc.output("blob");
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fname;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 1200);
+    openPdfBlob(doc, fname);
   }
 
   /********************
@@ -1000,16 +1142,21 @@
     ['priceBottle','people','drinkPerPerson','cookLiters'].forEach(id=>{
       document.getElementById(id).addEventListener(evt, ()=>{
         onInteract();
-        calcCore(); // aggiorna valori a destra senza mostrare risultati
+        calcCore(); // aggiorna i numerini
       });
     });
   });
 
-  els.btnCalc.addEventListener('click', ()=>{
+  els.btnCalc.addEventListener('click', async ()=>{
     const d = calcCore();
+
+    // Mostra prima (così Chart.js misura bene) poi crea chart
+    els.resultsWrap.classList.add('show');
+    await new Promise(r => requestAnimationFrame(r));
+    buildChartIfNeeded();
+
     renderResults(d);
 
-    els.resultsWrap.classList.add('show');
     els.resultsWrap.scrollIntoView({ behavior:'smooth', block:'start' });
 
     els.btnPdf.disabled = false;
@@ -1039,19 +1186,15 @@
     }
   });
 
-  // WhatsApp senza popup (evita “finestra a comparsa” su iPhone)
   els.btnShare.addEventListener('click', ()=>{
     const d = lastData || calcCore();
     const url = 'https://wa.me/?text=' + encodeURIComponent(summary(d));
-    window.location.href = url;
+    window.open(url, '_blank');
   });
 
   els.btnPdf.addEventListener('click', generatePdf);
 
-  /********************
-   * INIT
-   ********************/
-  buildChart();
+  // INIT
   calcCore();
   ensureButtonsState();
 </script>
