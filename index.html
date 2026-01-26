@@ -4,124 +4,100 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calcolatore ROI eSpring – Team Longobardi</title>
-  <meta name="description" content="Consulenza eSpring: video + calcolo ROI personalizzato + PDF cliente." />
+  <meta name="description" content="Calcolatore ROI eSpring vs acqua in bottiglia con grafici, break-even e PDF cliente." />
 
   <style>
     :root{
-      --bg:#0b1220;
-      --panel:#0f172a;
-      --card:#0b1324;
-      --card2:#0c162b;
+      --bg:#0b0f14;
+      --card:#0f1720;
+      --card2:#111b26;
       --text:#e5e7eb;
-      --muted:#9ca3af;
+      --muted:#a7b0bd;
       --line:rgba(255,255,255,.10);
       --brand:#10b981;
-      --brand2:#60a5fa;
-      --good:#34d399;
-      --bad:#fb7185;
-      --shadow: 0 18px 45px rgba(0,0,0,.35);
-      --shadow2: 0 22px 60px rgba(0,0,0,.45);
-      --radius:18px;
+      --brand2:#22c55e;
+      --accent:#38bdf8;
+      --shadow: 0 18px 45px rgba(0,0,0,.38);
+      --glow: 0 0 0 2px rgba(16,185,129,.25), 0 18px 45px rgba(16,185,129,.12);
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
       background:
-        radial-gradient(1200px 700px at 10% -10%, rgba(96,165,250,.18) 0%, rgba(96,165,250,0) 55%),
-        radial-gradient(1000px 650px at 95% 5%, rgba(16,185,129,.16) 0%, rgba(16,185,129,0) 60%),
-        linear-gradient(180deg, #070b14 0%, var(--bg) 100%);
+        radial-gradient(1100px 650px at 18% -10%, rgba(56,189,248,.18) 0%, rgba(56,189,248,0) 55%),
+        radial-gradient(900px 520px at 95% 10%, rgba(16,185,129,.16) 0%, rgba(16,185,129,0) 58%),
+        linear-gradient(180deg, #070a0e 0%, var(--bg) 100%);
     }
     .wrap{max-width:1180px;margin:0 auto;padding:22px}
-    a{color:var(--brand2);text-decoration:none}
+    a{color:#c7f9ff;text-decoration:none}
     a:hover{text-decoration:underline}
 
     /* HERO */
     .hero{
       border-radius:22px;
-      padding:18px;
-      box-shadow:var(--shadow2);
+      padding:18px 18px 14px;
+      box-shadow:var(--shadow);
       background:
-        linear-gradient(135deg, rgba(16,185,129,.18) 0%, rgba(96,165,250,.18) 65%, rgba(56,189,248,.14) 100%),
-        linear-gradient(180deg, rgba(255,255,255,.04) 0%, rgba(255,255,255,.02) 100%);
+        linear-gradient(135deg, rgba(16,185,129,.18) 0%, rgba(56,189,248,.14) 42%, rgba(15,23,32,.92) 100%),
+        radial-gradient(650px 420px at 12% 0%, rgba(16,185,129,.18) 0%, rgba(16,185,129,0) 60%),
+        radial-gradient(700px 460px at 88% 10%, rgba(56,189,248,.18) 0%, rgba(56,189,248,0) 60%);
       border:1px solid rgba(255,255,255,.10);
       position:relative;
       overflow:hidden;
     }
-    .hero:before{
-      content:"";
-      position:absolute; inset:-140px -180px auto auto;
-      width:460px; height:460px; border-radius:50%;
-      background: rgba(255,255,255,.07);
-      transform: translate(40px,-40px);
-      pointer-events:none;
-      filter: blur(0.3px);
-    }
-    .heroGrid{
-      display:grid;
-      grid-template-columns: 1fr 520px;
-      gap:16px;
-      align-items:start;
-      position:relative;
-      z-index:1;
-    }
-    @media (max-width: 1050px){ .heroGrid{grid-template-columns:1fr} }
-
-    .hero h1{margin:0;font-size:22px;line-height:1.2;letter-spacing:.2px}
-    .hero p{margin:8px 0 0;max-width:85ch;opacity:.92;font-size:14px;line-height:1.45}
-    .heroMeta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+    .heroTop{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+    .hero h1{margin:0;font-size:20px;line-height:1.25}
+    .hero p{margin:8px 0 0;max-width:88ch;opacity:.94;font-size:13.5px;line-height:1.45;color:rgba(229,231,235,.88)}
+    .heroBar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
     .pill{
       display:inline-flex; gap:8px; align-items:center;
-      padding:10px 12px; border-radius:999px;
+      padding:9px 11px; border-radius:999px;
       background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      font-size:13px;
+      border:1px solid rgba(255,255,255,.12);
+      font-size:12.5px;
       backdrop-filter: blur(6px);
-    }
-    .dot{width:8px;height:8px;border-radius:50%;background:var(--good)}
-    .pill b{font-weight:950}
-
-    .heroLinks{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
-    .ghostBtn{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      color:var(--text);
-      font-size:13px;
-      cursor:pointer;
-    }
-    .videoWrap{
-      border-radius:18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow: 0 18px 45px rgba(0,0,0,.35);
-      background: rgba(255,255,255,.03);
-    }
-    .videoWrap video{display:block;width:100%}
-
-    .heroStep{
-      margin-top:12px;
-      padding:10px 12px;
-      border-radius:16px;
-      background: rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.10);
-      font-size:13px;
-      line-height:1.35;
       color:rgba(229,231,235,.92);
     }
-    .heroStep b{font-weight:950}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--brand)}
+    .pill b{font-weight:900;color:#fff}
+    .heroLinks{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center}
+    .btnLink{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:9px 11px;border-radius:999px;
+      background: rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.14);
+      color:#eafcff;
+      font-size:12.5px;
+    }
+    .btnLink strong{font-weight:900}
+    .btnLink.primary{
+      background: linear-gradient(90deg, rgba(16,185,129,.28) 0%, rgba(56,189,248,.18) 100%);
+      border-color: rgba(16,185,129,.22);
+    }
 
-    /* LAYOUT */
+    .videoWrap{
+      margin-top:12px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 18px 45px rgba(0,0,0,.38);
+      background: rgba(255,255,255,.04);
+    }
+    .videoWrap video{display:block;width:100%}
+    .heroNote{
+      font-size:12.5px;line-height:1.45;color:rgba(229,231,235,.80);margin-top:10px
+    }
+
+    /* GRID */
     .grid{display:grid;grid-template-columns: 420px 1fr;gap:16px;margin-top:16px}
     @media (max-width: 980px){.grid{grid-template-columns:1fr}}
 
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.04) 0%, rgba(255,255,255,.02) 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.035) 100%);
       border:1px solid rgba(255,255,255,.10);
-      border-radius:var(--radius);
+      border-radius:18px;
       box-shadow:var(--shadow);
       overflow:hidden;
     }
@@ -129,238 +105,166 @@
     .bd{padding:16px}
     h2{margin:0;font-size:16px}
     .hint{color:var(--muted);font-size:12.5px;margin-top:6px;line-height:1.35}
-    .divider{height:1px;background:rgba(255,255,255,.10);margin:14px 0}
 
     /* INPUTS */
-    .row{display:flex;gap:12px;align-items:center;justify-content:space-between;margin:12px 0}
-    .row label{font-size:13px;color:var(--text);font-weight:950}
-    .row .val{font-variant-numeric: tabular-nums; color:#93c5fd; font-weight:1000}
-    input[type=range]{width:100%}
-    .rangeMeta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:6px}
-    input[type=range]{
-      accent-color: var(--brand2);
-    }
-
-    .field{display:grid;gap:6px;margin-top:10px;}
-    .field label{font-size:12.5px;color:var(--muted);font-weight:850}
-    .field input{
-      width:100%;
+    .fieldRow{display:flex;gap:10px;flex-wrap:wrap}
+    .field{
+      flex:1;min-width:170px;
+      background:rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
       padding:10px 12px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:12px;
-      font-size:14px;
+      color:var(--text);
       outline:none;
-      background: rgba(255,255,255,.03);
-      color: var(--text);
     }
-    .field input::placeholder{color:rgba(156,163,175,.85)}
-    .field input:focus{border-color:rgba(96,165,250,.55); box-shadow:0 0 0 3px rgba(96,165,250,.18)}
+    .row{display:flex;gap:12px;align-items:center;justify-content:space-between;margin:12px 0 8px}
+    .row label{font-size:13px;color:var(--text);font-weight:850}
+    .row .val{font-variant-numeric: tabular-nums; color:#9fe7ff; font-weight:900}
+    input[type=range]{width:100%}
+    .rangeMeta{display:flex;justify-content:space-between;color:rgba(167,176,189,.85);font-size:12px;margin-top:6px}
+    .divider{height:1px;background:rgba(255,255,255,.10);margin:14px 0}
 
-    /* BUTTONS */
-    .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    /* CTA */
+    .cta{display:grid;grid-template-columns: 1fr 1fr;gap:10px;margin-top:10px}
+    @media (max-width: 420px){.cta{grid-template-columns:1fr}}
     button{
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-      padding:10px 12px;
-      border-radius:12px;
+      background: rgba(255,255,255,.06);
+      padding:11px 12px;
+      border-radius:14px;
       cursor:pointer;
-      font-weight:1000;
+      font-weight:900;
       color:var(--text);
-      transition: transform .12s ease, box-shadow .12s ease, filter .12s ease, opacity .12s ease;
+      transition: transform .12s ease, filter .12s ease, box-shadow .18s ease, opacity .18s ease;
     }
+    button:hover{filter:brightness(1.06)}
+    button:active{transform: translateY(1px) scale(.995)}
     button.primary{
-      background:linear-gradient(90deg, rgba(16,185,129,.95) 0%, rgba(20,184,166,.95) 100%);
-      color:#052014;border-color:transparent;
+      background: linear-gradient(90deg, rgba(16,185,129,.55) 0%, rgba(16,185,129,.22) 55%, rgba(56,189,248,.18) 100%);
+      border-color: rgba(16,185,129,.28);
+      box-shadow: var(--glow);
     }
-    button:hover{filter:brightness(1.03)}
-    button:disabled{
-      opacity:.50;
+    button.disabled{
+      opacity:.45;
       cursor:not-allowed;
-      filter:saturate(.6);
-      transform:none;
       box-shadow:none;
     }
+    .subCta{display:grid;grid-template-columns: 1fr 1fr;gap:10px;margin-top:10px}
+    @media (max-width: 420px){.subCta{grid-template-columns:1fr}}
 
-    .wowReady{
-      box-shadow: 0 18px 50px rgba(16,185,129,.25);
-      transform: translateY(-1px);
-      animation: pulse 1.2s ease-in-out infinite;
+    .note{
+      font-size:12.5px;color:rgba(167,176,189,.92);line-height:1.45;margin-top:10px
     }
-    @keyframes pulse{
-      0%,100%{ box-shadow: 0 18px 50px rgba(16,185,129,.18); }
-      50%{ box-shadow: 0 26px 70px rgba(16,185,129,.30); }
-    }
-
-    /* CALLOUT */
     .callout{
       margin-top:12px;
       padding:12px 12px;
       border-radius:16px;
-      border:1px solid rgba(96,165,250,.30);
-      background: linear-gradient(180deg, rgba(96,165,250,.12) 0%, rgba(255,255,255,.02) 100%);
-      color:rgba(229,231,235,.95);
+      border:1px solid rgba(56,189,248,.25);
+      background: linear-gradient(180deg, rgba(56,189,248,.10) 0%, rgba(0,0,0,.18) 100%);
+      color:rgba(229,231,235,.92);
       font-size:12.5px;
       line-height:1.45;
     }
 
     /* RESULTS */
-    #resultsWrap{display:none;}
-    .revealAnim{animation: revealIn .55s cubic-bezier(.2,.9,.2,1) both;}
-    @keyframes revealIn{
-      from{ opacity:0; transform: translateY(10px); filter: blur(2px); }
-      to{ opacity:1; transform: translateY(0); filter: blur(0); }
+    .resultsHidden{display:none}
+    .reveal{
+      animation: reveal .35s ease both;
+    }
+    @keyframes reveal{
+      from{opacity:0; transform: translateY(10px)}
+      to{opacity:1; transform: translateY(0)}
     }
 
-    .saveHero{
+    .bigBox{
       border-radius:18px;
-      border:1px solid rgba(96,165,250,.35);
+      border:1px solid rgba(16,185,129,.22);
       background:
-        linear-gradient(180deg, rgba(96,165,250,.14) 0%, rgba(16,185,129,.10) 100%),
-        rgba(255,255,255,.02);
+        radial-gradient(800px 260px at 20% 0%, rgba(16,185,129,.16) 0%, rgba(16,185,129,0) 58%),
+        linear-gradient(180deg, rgba(255,255,255,.06) 0%, rgba(0,0,0,.18) 100%);
       padding:14px;
-      box-shadow: 0 16px 46px rgba(0,0,0,.35);
+      box-shadow: 0 18px 45px rgba(0,0,0,.25);
     }
-    .saveHeroTop{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .saveHeroTop .title{
-      font-weight:1100;
-      font-size:12.5px;
-      letter-spacing:.25px;
-      color:rgba(229,231,235,.92);
-      text-transform:uppercase;
-    }
-    .toggle{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
-    .toggle button{
-      border-radius:999px;
-      padding:8px 10px;
-      font-size:13px;
-      font-weight:1100;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      color:rgba(229,231,235,.92);
-    }
-    .toggle button.active{
-      background:linear-gradient(90deg, rgba(16,185,129,.95) 0%, rgba(20,184,166,.95) 100%);
-      border-color:transparent;
-      color:#052014;
-    }
-    .saveHeroValue{
-      margin-top:10px;
-      font-size:36px;
-      font-weight:1200;
-      color:var(--good);
-      font-variant-numeric: tabular-nums;
-      letter-spacing:.3px;
-    }
-    .saveHeroSub{
-      margin-top:8px;
+    .bigTitle{font-size:12.5px;color:rgba(229,231,235,.80);letter-spacing:.2px}
+    .toggleRow{display:flex;gap:10px;margin-top:10px}
+    .toggleBtn{
+      padding:9px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      font-weight:900;
       color:rgba(229,231,235,.88);
-      font-size:12.8px;
-      line-height:1.4;
+      cursor:pointer;
+      transition: filter .12s ease, transform .12s ease, box-shadow .18s ease;
     }
-    .saveHeroSub b{font-weight:1100;color:#e5e7eb}
-    .micro{
-      margin-top:8px;
-      color:rgba(229,231,235,.80);
-      font-size:12.2px;
-      line-height:1.35;
+    .toggleBtn.active{
+      background: linear-gradient(90deg, rgba(16,185,129,.55) 0%, rgba(56,189,248,.16) 100%);
+      border-color: rgba(16,185,129,.30);
+      color:#fff;
+      box-shadow: var(--glow);
     }
+    .bigNumber{
+      margin-top:10px;
+      font-size:44px;
+      font-weight:1000;
+      letter-spacing:-.6px;
+      color: rgba(167,243,208,.98);
+      font-variant-numeric: tabular-nums;
+    }
+    .bigMeta{margin-top:6px;color:rgba(167,176,189,.92);font-size:12.5px;line-height:1.4}
 
     .kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-    @media (max-width: 700px){.kpis{grid-template-columns:1fr}}
+    @media (max-width: 620px){.kpis{grid-template-columns:1fr}}
     .kpi{
-      padding:14px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:16px;
-      background: rgba(255,255,255,.02);
-      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+      padding:14px;border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;background: rgba(0,0,0,.22);
     }
-    .kpi .t{color:rgba(156,163,175,.92);font-size:12px;margin-bottom:6px;font-weight:950}
-    .kpi .n{
-      font-size:18px;font-weight:1150;color:var(--text);
-      font-variant-numeric: tabular-nums
-    }
-    .kpi .n.pos{color:var(--good)}
-    .kpi .n.neg{color:var(--bad)}
-    .kpi .s{color:rgba(156,163,175,.90);font-size:12px;margin-top:6px;line-height:1.35}
+    .kpi .t{color:rgba(167,176,189,.92);font-size:12px;margin-bottom:6px}
+    .kpi .n{font-size:20px;font-weight:1000;color:#eafff8;font-variant-numeric: tabular-nums}
+    .kpi .s{color:rgba(167,176,189,.92);font-size:12px;margin-top:6px;line-height:1.35}
 
+    /* charts */
     .charts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
     @media (max-width: 980px){.charts{grid-template-columns:1fr}}
     .chartCard{
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
-      background: rgba(255,255,255,.02);
-      padding:14px
+      background: rgba(0,0,0,.20);
+      padding:14px;
     }
-    .chartTitle strong{font-size:13px;color:rgba(229,231,235,.92)}
-    .small{font-size:12px;color:rgba(156,163,175,.92);line-height:1.35;margin-top:6px}
+    .chartTitle strong{font-size:13px}
+    .small{font-size:12px;color:rgba(167,176,189,.92);line-height:1.35;margin-top:6px}
     canvas{max-width:100%}
 
-    table{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0;
-      overflow:hidden;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.10);
-      margin-top:12px;
-      background: rgba(255,255,255,.02);
-    }
-    th,td{padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px}
-    th{background: rgba(255,255,255,.04);text-align:left;color:rgba(229,231,235,.92)}
-    tr:last-child td{border-bottom:none}
-    .right{text-align:right;font-variant-numeric: tabular-nums}
-    .note{font-size:12.5px;color:rgba(156,163,175,.92);line-height:1.45;margin-top:10px}
-
-    /* WHY / SPECS */
-    .specGrid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-top:12px;
-    }
-    @media (max-width: 980px){.specGrid{grid-template-columns:1fr}}
-    .specCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:18px;
-      background: rgba(255,255,255,.02);
-      padding:14px;
-      box-shadow: 0 10px 24px rgba(0,0,0,.22);
-    }
-    .specCard h3{margin:0;font-size:14px}
-    .specCard p{margin:8px 0 0;color:rgba(156,163,175,.92);font-size:12.5px;line-height:1.45}
-    .specCard .tag{
+    /* docs */
+    .docLinks{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .docBtn{
       display:inline-flex;align-items:center;gap:8px;
-      font-size:12px;color:rgba(16,185,129,.95);
-      background: rgba(16,185,129,.08);
-      border:1px solid rgba(16,185,129,.20);
-      padding:6px 10px;border-radius:999px;margin-bottom:10px;
-      font-weight:950;
+      padding:10px 12px;border-radius:14px;
+      background: rgba(56,189,248,.10);
+      border:1px solid rgba(56,189,248,.22);
+      color:#eafcff;
+      font-weight:900;
+      font-size:13px;
+    }
+    .docBtn.secondary{
+      background: rgba(16,185,129,.10);
+      border-color: rgba(16,185,129,.22);
     }
 
-    /* CERT */
+    /* certifications image */
     .certWrap{
-      margin-top:16px;
-      border:1px solid rgba(255,255,255,.10);
+      margin-top:14px;
       border-radius:18px;
       overflow:hidden;
-      background: rgba(255,255,255,.02);
-      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.20);
     }
-    .certHd{padding:14px 14px 0;}
-    .certHd h3{margin:0;font-size:14px}
-    .certHd .small{margin-top:6px}
     .certWrap img{display:block;width:100%;height:auto}
 
     @media print{
-      .hero, .cta, #calcBtn, #calcHint, #share, #copy, #downloadPdf { display:none !important; }
-      body{ background:#fff; color:#000; }
-      .card{ box-shadow:none; border-color:#ddd; }
+      .hero, .videoWrap, .charts, #share, #copy, #pdfBtn, .heroLinks, .heroBar { display:none !important; }
+      body{ background:#fff; color:#000 }
+      .card{ box-shadow:none; border:1px solid #ddd }
     }
   </style>
 
@@ -370,57 +274,58 @@
 
 <body>
   <div class="wrap">
-    <section class="hero" id="top">
-      <div class="heroGrid">
-        <div>
-          <h1>Consulenza eSpring – Calcolo ROI personalizzato</h1>
+    <section class="hero">
+      <div class="heroTop">
+        <div style="flex:1;min-width:280px;">
+          <h1>Calcolatore ROI eSpring – Team Longobardi</h1>
           <p>
-            <b>1)</b> Guarda il video (panoramica prodotto).<br/>
-            <b>2)</b> Inseriamo i consumi reali del cliente.<br/>
-            <b>3)</b> Premi <b>Calcola risultati</b> per mostrare numeri e grafici.
+            Prima guarda il video dimostrativo. Poi inseriamo insieme lo scenario e calcoliamo un riepilogo personalizzato
+            (con PDF finale da lasciare al cliente).
           </p>
 
-          <div class="heroMeta">
-            <div class="pill"><span class="dot"></span><b>Rientro</b> investimento iniziale</div>
-            <div class="pill"><span class="dot"></span><b>Risparmio</b> 5 / 10 anni</div>
-            <div class="pill"><span class="dot"></span><b>Ricambi</b> ogni 5.000 L (stima)</div>
+          <div class="heroBar">
+            <div class="pill"><span class="dot"></span><b>Risparmio</b> chiaro in €</div>
+            <div class="pill"><span class="dot"></span><b>Break-even</b> investimento iniziale</div>
+            <div class="pill"><span class="dot"></span><b>5.000 L</b> ≈ 10.000 bottigliette</div>
           </div>
 
           <div class="heroLinks">
-            <a class="ghostBtn" href="Infografica-Generale-eSpring.pdf" target="_blank" rel="noopener">Apri infografica (PDF)</a>
-            <a class="ghostBtn" href="prestazioni-espring.pdf" target="_blank" rel="noopener">Apri prestazioni (PDF)</a>
-            <a class="ghostBtn" href="https://www.espring.com" target="_blank" rel="noopener">www.espring.com</a>
+            <a class="btnLink primary" href="Infografica-Generale-eSpring.pdf" target="_blank" rel="noopener">
+              <strong>Infografica</strong> (PDF)
+            </a>
+            <a class="btnLink" href="prestazioni-espring.pdf" target="_blank" rel="noopener">
+              <strong>Prestazioni</strong> (PDF)
+            </a>
+            <a class="btnLink" href="https://www.espring.com" target="_blank" rel="noopener">
+              Sito eSpring
+            </a>
           </div>
 
-          <div class="heroStep">
-            Nota tecnica: il dispositivo include <b>1 filtro</b>. I filtri successivi si acquistano quando i litri cumulati superano multipli di <b>5.000 L</b>.
+          <div class="videoWrap">
+            <video controls playsinline preload="metadata" poster="hero.jpg">
+              <source src="presentazione-espring.mp4" type="video/mp4">
+              Il tuo browser non supporta il video HTML5.
+            </video>
           </div>
-        </div>
 
-        <div class="videoWrap">
-          <video controls playsinline preload="metadata" poster="hero.jpg">
-            <source src="presentazione-espring.mp4" type="video/mp4">
-            Il tuo browser non supporta il video HTML5.
-          </video>
+          <div class="heroNote">
+            Nota calcolo: il dispositivo include il 1° filtro. I filtri successivi si acquistano quando i litri cumulati superano multipli di 5.000 L.
+          </div>
         </div>
       </div>
     </section>
 
     <div class="grid">
-      <!-- INPUTS -->
+      <!-- LEFT: INPUTS -->
       <section class="card">
         <div class="hd">
-          <h2>Dati cliente</h2>
-          <div class="hint">Compila i consumi. Poi premi <b>Calcola risultati</b> per l’effetto “wow”.</div>
+          <h2>Scenario (su misura)</h2>
+          <div class="hint">Compila i dati, poi premi <b>Calcola risultati</b>.</div>
         </div>
         <div class="bd">
-          <div class="field">
-            <label for="aboPartner">Nome ABO Partner (opzionale)</label>
-            <input id="aboPartner" type="text" placeholder="Nome ABO Partner" />
-          </div>
-          <div class="field">
-            <label for="clientName">Nome cliente (opzionale)</label>
-            <input id="clientName" type="text" placeholder="Nome cliente" />
+          <div class="fieldRow">
+            <input id="aboName" class="field" type="text" placeholder="Nome ABO Partner (opzionale)" />
+            <input id="clientName" class="field" type="text" placeholder="Nome cliente (opzionale)" />
           </div>
 
           <div class="divider"></div>
@@ -456,168 +361,123 @@
           <div class="rangeMeta"><span>0</span><span>12</span></div>
 
           <div class="cta">
-            <button class="primary" id="calcBtn" disabled>Calcola risultati</button>
-            <button class="primary" id="downloadPdf" disabled>Genera PDF cliente</button>
+            <button class="primary" id="calcBtn">Calcola risultati</button>
+            <button class="" id="pdfBtn">Genera PDF cliente</button>
+          </div>
+
+          <div class="subCta">
             <button id="share">Condividi (WhatsApp)</button>
             <button id="copy">Copia riepilogo</button>
           </div>
 
-          <div class="hint" id="calcHint" style="margin-top:10px;">
-            Premi “Calcola risultati” per mostrare i risultati.
-          </div>
+          <div class="note" id="calcHint">Premi <b>Calcola risultati</b> per mostrare i risultati.</div>
 
           <div class="callout">
-            Riferimento rapido: <b>5.000 L</b> ≈ <b>10.000</b> bottigliette da <b>500 ml</b> (monouso) potenzialmente evitate.
+            Riferimento rapido: <b>5.000 L</b> ≈ <b>10.000</b> bottigliette da 500 ml (monouso) potenzialmente evitate.
           </div>
         </div>
       </section>
 
-      <!-- RESULTS -->
-      <section class="card" id="resultsCard">
+      <!-- RIGHT: RESULTS -->
+      <section class="card">
         <div class="hd">
           <h2>Risultati</h2>
           <div class="hint">Dopo “Calcola risultati” compaiono numeri, grafici e riepilogo.</div>
         </div>
 
-        <div class="bd" id="resultsWrap">
-          <div class="saveHero" id="saveHero">
-            <div class="saveHeroTop">
-              <div class="title">Risparmio totale stimato (bottiglie – eSpring)</div>
-              <div class="toggle">
-                <button type="button" id="t5" class="active">5 anni</button>
-                <button type="button" id="t10">10 anni</button>
+        <div class="bd">
+          <div id="resultsWrap" class="resultsHidden">
+            <!-- BIG SAVINGS BOX -->
+            <div class="bigBox">
+              <div class="bigTitle"><b>RISPARMIO TOTALE STIMATO</b> (BOTTIGLIE – eSpring)</div>
+
+              <div class="toggleRow">
+                <button class="toggleBtn active" id="t5" type="button">5 anni</button>
+                <button class="toggleBtn" id="t10" type="button">10 anni</button>
+              </div>
+
+              <div class="bigNumber" id="bigSave">—</div>
+
+              <div class="bigMeta">
+                Orizzonte selezionato: <span id="bigHorizon">5 anni</span> •
+                Break-even: <span id="bigBE">—</span> •
+                Bottigliette/anno: <span id="bigBottles">—</span>
               </div>
             </div>
 
-            <div class="saveHeroValue" id="saveHeroValue">—</div>
+            <div class="kpis">
+              <div class="kpi">
+                <div class="t">Break-even (investimento iniziale)</div>
+                <div class="n" id="breakeven">—</div>
+                <div class="s">Rientro sul solo dispositivo (1° filtro incluso).</div>
+              </div>
 
-            <div class="saveHeroSub" id="saveHeroSub">
-              Orizzonte selezionato: <b id="horizonLabel">5 anni</b> •
-              Rientro investimento iniziale: <b id="beInitialInline">—</b> •
-              Bottigliette/anno: <b id="bottlesInline">—</b>
+              <div class="kpi">
+                <div class="t">Differenza €/L (media 5 anni)</div>
+                <div class="n" id="savePerLiter">—</div>
+                <div class="s">Bottiglie vs costo medio eSpring (include dispositivo e filtri quando servono).</div>
+              </div>
+
+              <div class="kpi">
+                <div class="t">Bottigliette/anno (stima)</div>
+                <div class="n" id="bottlesSavedYear">—</div>
+                <div class="s">Bottiglie da 500 ml evitate.</div>
+              </div>
+
+              <div class="kpi">
+                <div class="t">Consumo totale</div>
+                <div class="n" id="litersYear">—</div>
+                <div class="s">Bere + cucina (annuo).</div>
+              </div>
             </div>
 
-            <div class="micro">
-              Dopo il rientro, costo acqua legato ai ricambi: <b>circa 5 cent/L</b> (stima).
-              <span style="opacity:.85">Nel lungo periodo il risparmio si consolida e aumenta.</span>
+            <div class="divider"></div>
+
+            <div class="charts">
+              <div class="chartCard">
+                <div class="chartTitle"><strong>Costo cumulato (0–10 anni)</strong></div>
+                <div class="small">Il punto di incrocio è il break-even “totale” (con filtri quando servono).</div>
+                <canvas id="costChart" height="170"></canvas>
+              </div>
+              <div class="chartCard">
+                <div class="chartTitle"><strong>Bottigliette evitate</strong></div>
+                <div class="small">Stima bottigliette da 500 ml evitate (anno / 5 anni / 10 anni).</div>
+                <canvas id="bottleChart" height="170"></canvas>
+              </div>
             </div>
 
-            <div class="micro" style="opacity:.85; margin-top:6px;">
-              Nota: rientro totale (incl. ricambi quando si supera 5.000 L): <b id="beTotalInline">—</b>.
-            </div>
-          </div>
+            <div class="divider"></div>
 
-          <div class="kpis">
-            <div class="kpi">
-              <div class="t">Rientro investimento iniziale</div>
-              <div class="n pos" id="breakevenInitial">—</div>
-              <div class="s">Confronto bottiglie vs costo iniziale (dispositivo + 1° filtro incluso).</div>
+            <div class="kpi" style="background:rgba(0,0,0,.18)">
+              <div class="t">Nota “costo acqua” (stima)</div>
+              <div class="s">
+                Dopo il rientro dell’investimento, il costo è legato principalmente ai ricambi: <b>≈ 5 cent/L</b> (stima arrotondata).
+                <br>
+                <span id="capacityNote"></span>
+              </div>
             </div>
-            <div class="kpi">
-              <div class="t">Differenza EUR/L (media 5 anni)</div>
-              <div class="n" id="savePerLiter">—</div>
-              <div class="s">Bottiglie vs costo medio eSpring (include dispositivo).</div>
-            </div>
-            <div class="kpi">
-              <div class="t">Bottigliette/anno (stima)</div>
-              <div class="n" id="bottlesYear">—</div>
-              <div class="s">Bottiglie 500 ml evitate.</div>
-            </div>
-            <div class="kpi">
-              <div class="t">Consumo totale</div>
-              <div class="n" id="litersYearBig">—</div>
-              <div class="s">Bere + cucina (annuo).</div>
-            </div>
-          </div>
 
-          <div class="charts">
-            <div class="chartCard">
-              <div class="chartTitle"><strong>Costo cumulato (0–10 anni)</strong></div>
-              <div class="small">Le linee si incrociano quando avviene il rientro totale.</div>
-              <canvas id="costChart" height="190"></canvas>
-            </div>
-            <div class="chartCard">
-              <div class="chartTitle"><strong>Bottigliette evitate</strong></div>
-              <div class="small">Stima bottigliette da 500 ml evitate (anno / 5 anni / 10 anni).</div>
-              <canvas id="bottleChart" height="190"></canvas>
-            </div>
-          </div>
+            <div class="divider"></div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Voce</th>
-                <th class="right">Bottiglie</th>
-                <th class="right">eSpring</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Litri totali/anno (bere + cucina)</td>
-                <td class="right" id="litersYearB">—</td>
-                <td class="right" id="litersYearE">—</td>
-              </tr>
-              <tr>
-                <td>Costo annuo stimato (1° anno)</td>
-                <td class="right" id="yearCostB">—</td>
-                <td class="right" id="yearCostE">—</td>
-              </tr>
-              <tr>
-                <td>Costo totale 5 anni</td>
-                <td class="right" id="cost5B">—</td>
-                <td class="right" id="cost5E">—</td>
-              </tr>
-              <tr>
-                <td>Costo totale 10 anni</td>
-                <td class="right" id="cost10B">—</td>
-                <td class="right" id="cost10E">—</td>
-              </tr>
-            </tbody>
-          </table>
+            <div class="kpi" style="background:rgba(0,0,0,.18)">
+              <div class="t">Prestazioni (sintesi)</div>
+              <div class="s">
+                • <b>Riduce efficacemente 170+ contaminanti</b>, tra cui microplastiche, PFOA e PFOS e prodotti farmaceutici.<br>
+                • <b>Rimuove efficacemente</b> fino al 99,9999% dei batteri • 99,99% dei virus • 99,9% delle cisti.<br>
+                • <b>Trattiene i minerali benefici</b> naturalmente presenti nell’acqua.<br>
+                • <b>Filtro al Carbone e3</b>: può trattare fino a <b>~5.000 L</b> (in base all’uso) ≈ <b>10.000</b> bottigliette da 500 ml.
+              </div>
 
-          <div class="note" id="capacityNote">
-            —
-          </div>
-
-          <div class="divider"></div>
-
-          <h2 style="font-size:15px">Perché eSpring</h2>
-          <div class="hint">Sintesi rapida. Per i dettagli: infografica e prestazioni ufficiali.</div>
-
-          <div class="specGrid">
-            <div class="specCard">
-              <div class="tag">Filtrazione</div>
-              <h3>Riduzione di 170+ contaminanti</h3>
-              <p>Tra cui microplastiche, PFOA e PFOS e prodotti farmaceutici (vedi documenti ufficiali).</p>
+              <div class="docLinks">
+                <a class="docBtn primary" href="Infografica-Generale-eSpring.pdf" target="_blank" rel="noopener">Apri infografica (PDF)</a>
+                <a class="docBtn secondary" href="prestazioni-espring.pdf" target="_blank" rel="noopener">Apri prestazioni (PDF)</a>
+              </div>
             </div>
-            <div class="specCard">
-              <div class="tag">Microbiologico</div>
-              <h3>Riduzione microbica (UV-C)</h3>
-              <p>Riferimenti: fino a 99,9999% batteri • 99,99% virus • 99,9% cisti (vedi documenti ufficiali).</p>
-            </div>
-            <div class="specCard">
-              <div class="tag">Benessere</div>
-              <h3>Trattiene i minerali benefici</h3>
-              <p>Acqua pulita e dal sapore eccezionale ad ogni sorso.</p>
-            </div>
-            <div class="specCard">
-              <div class="tag">Capacità</div>
-              <h3>Fino a 5.000 L per filtro (stima)</h3>
-              <p>Equivalenti a circa 10.000 bottigliette da 500 ml potenzialmente evitate.</p>
-            </div>
-          </div>
 
-          <div class="cta" style="margin-top:12px;">
-            <a class="ghostBtn" href="Infografica-Generale-eSpring.pdf" target="_blank" rel="noopener">Apri infografica (PDF)</a>
-            <a class="ghostBtn" href="prestazioni-espring.pdf" target="_blank" rel="noopener">Apri prestazioni (PDF)</a>
-          </div>
-
-          <div class="certWrap">
-            <div class="certHd">
-              <h3>Certificazioni (immagine)</h3>
-              <div class="small">Allegato visivo a fine pagina, stile “dossier”.</div>
+            <div class="certWrap" aria-label="Certificazioni eSpring">
+              <img src="certificazioni.png" alt="Certificazioni eSpring" />
             </div>
-            <img src="certificazioni.png" alt="Certificazioni eSpring" />
+
           </div>
         </div>
       </section>
@@ -625,61 +485,18 @@
   </div>
 
 <script>
-  // ======= LISTINI (aggiorna se cambiano) =======
-  const ESPRING_DEVICE = 1516.77; // dispositivo (IVA incl.) include 1 filtro
-  const ESPRING_FILTER = 287.24;  // filtro + prefiltro
-  const FILTER_CAPACITY_L = 5000; // litri per filtro
+  // =========================
+  // CONFIG
+  // =========================
+  const ESPRING_DEVICE = 1516.77; // € dispositivo (IVA inclusa; include 1 filtro)
+  const ESPRING_FILTER = 287.24;  // € filtro+prefiltro di ricambio
+  const FILTER_CAPACITY_L = 5000;
 
-  // ======= HELPERS =======
-  const fmtEUR = (n) => n.toLocaleString('it-IT', {style:'currency', currency:'EUR'});
-  const fmtNum = (n) => n.toLocaleString('it-IT', {maximumFractionDigits: 0});
-  const fmt1 = (n) => n.toLocaleString('it-IT', {minimumFractionDigits:1, maximumFractionDigits:1});
-
-  function beTextMonths(m){
-    if (m === null) return 'Oltre 20 anni';
-    if (m < 12) return m + ' mesi';
-    return (m/12).toLocaleString('it-IT',{maximumFractionDigits:1}) + ' anni';
-  }
-
-  // Filtri extra necessari dato un consumo cumulato; il primo è incluso nel dispositivo
-  function totalExtraFiltersNeeded(totalLiters){
-    return Math.max(0, Math.ceil(totalLiters / FILTER_CAPACITY_L) - 1);
-  }
-
-  function espringTotalCost(years, litersYear){
-    const liters = litersYear * years;
-    return ESPRING_DEVICE + totalExtraFiltersNeeded(liters) * ESPRING_FILTER;
-  }
-
-  function espringCostAtLiters(litersCum){
-    return ESPRING_DEVICE + totalExtraFiltersNeeded(litersCum) * ESPRING_FILTER;
-  }
-
-  // Break-even “totale” mese per mese su costi cumulati (max 20 anni)
-  function breakEvenTotalMonths(priceBottle, litersYear){
-    const litersMonth = litersYear / 12;
-    for(let m=1; m<=240; m++){
-      const bottleCost = (litersMonth * m) * priceBottle;
-      const litersCum = litersMonth * m;
-      const espringCost = espringCostAtLiters(litersCum);
-      if (espringCost <= bottleCost) return m;
-    }
-    return null;
-  }
-
-  // Break-even “investimento iniziale” (dispositivo + 1° filtro incluso), senza considerare i ricambi successivi
-  function breakEvenInitialMonths(priceBottle, litersYear){
-    const litersMonth = litersYear / 12;
-    for(let m=1; m<=240; m++){
-      const bottleCost = (litersMonth * m) * priceBottle;
-      if (ESPRING_DEVICE <= bottleCost) return m;
-    }
-    return null;
-  }
-
-  // ======= DOM =======
+  // =========================
+  // ELEMENTS
+  // =========================
   const els = {
-    aboPartner: document.getElementById('aboPartner'),
+    aboName: document.getElementById('aboName'),
     clientName: document.getElementById('clientName'),
 
     priceBottle: document.getElementById('priceBottle'),
@@ -692,64 +509,103 @@
     cookLitersVal: document.getElementById('cookLitersVal'),
 
     calcBtn: document.getElementById('calcBtn'),
-    downloadPdf: document.getElementById('downloadPdf'),
+    pdfBtn: document.getElementById('pdfBtn'),
     share: document.getElementById('share'),
     copy: document.getElementById('copy'),
-    resultsWrap: document.getElementById('resultsWrap'),
-    resultsCard: document.getElementById('resultsCard'),
 
-    // save hero
+    resultsWrap: document.getElementById('resultsWrap'),
+    calcHint: document.getElementById('calcHint'),
+
     t5: document.getElementById('t5'),
     t10: document.getElementById('t10'),
-    saveHeroValue: document.getElementById('saveHeroValue'),
-    horizonLabel: document.getElementById('horizonLabel'),
-    beInitialInline: document.getElementById('beInitialInline'),
-    beTotalInline: document.getElementById('beTotalInline'),
-    bottlesInline: document.getElementById('bottlesInline'),
+    bigSave: document.getElementById('bigSave'),
+    bigHorizon: document.getElementById('bigHorizon'),
+    bigBE: document.getElementById('bigBE'),
+    bigBottles: document.getElementById('bigBottles'),
 
-    // KPIs
-    breakevenInitial: document.getElementById('breakevenInitial'),
+    breakeven: document.getElementById('breakeven'),
     savePerLiter: document.getElementById('savePerLiter'),
-    bottlesYear: document.getElementById('bottlesYear'),
-    litersYearBig: document.getElementById('litersYearBig'),
-
-    // table
-    litersYearB: document.getElementById('litersYearB'),
-    litersYearE: document.getElementById('litersYearE'),
-    yearCostB: document.getElementById('yearCostB'),
-    yearCostE: document.getElementById('yearCostE'),
-    cost5B: document.getElementById('cost5B'),
-    cost5E: document.getElementById('cost5E'),
-    cost10B: document.getElementById('cost10B'),
-    cost10E: document.getElementById('cost10E'),
+    bottlesSavedYear: document.getElementById('bottlesSavedYear'),
+    litersYear: document.getElementById('litersYear'),
     capacityNote: document.getElementById('capacityNote'),
-    calcHint: document.getElementById('calcHint'),
   };
+
+  const fmtEUR = (n) => n.toLocaleString('it-IT', {style:'currency', currency:'EUR'});
+  const fmtNum = (n) => n.toLocaleString('it-IT', {maximumFractionDigits: 0});
+  const fmt1 = (n) => n.toLocaleString('it-IT', {minimumFractionDigits:1, maximumFractionDigits:1});
 
   let costChart, bottleChart;
   let lastData = null;
-  let hasInteracted = false;
-  let selectedHorizon = 5;
-  let resultsShown = false;
+  let horizon = 5;
 
+  // =========================
+  // CALC MODEL
+  // =========================
+  function totalExtraFiltersNeeded(totalLiters){
+    return Math.max(0, Math.ceil(totalLiters / FILTER_CAPACITY_L) - 1);
+  }
+  function espringTotalCost(years, litersYear){
+    const liters = litersYear * years;
+    return ESPRING_DEVICE + totalExtraFiltersNeeded(liters) * ESPRING_FILTER;
+  }
+  function espringConsumablesYear1(litersYear){
+    return totalExtraFiltersNeeded(litersYear) * ESPRING_FILTER;
+  }
+
+  // Break-even "investimento iniziale": solo dispositivo (1° filtro incluso)
+  function breakEvenDeviceMonths(priceBottle, litersYear){
+    const litersMonth = litersYear / 12;
+    for(let m=1; m<=240; m++){
+      const bottleCost = (litersMonth * m) * priceBottle;
+      if (bottleCost >= ESPRING_DEVICE) return m;
+    }
+    return null;
+  }
+
+  // Break-even totale (dispositivo + filtri quando servono) per grafico
+  function breakEvenTotalMonths(priceBottle, litersYear){
+    const litersMonth = litersYear / 12;
+    for(let m=1; m<=240; m++){
+      const bottleCost = (litersMonth * m) * priceBottle;
+      const litersCum = litersMonth * m;
+      const espringCost = ESPRING_DEVICE + totalExtraFiltersNeeded(litersCum) * ESPRING_FILTER;
+      if (espringCost <= bottleCost) return m;
+    }
+    return null;
+  }
+
+  function beTextMonths(m){
+    if (m === null) return 'Oltre 20 anni';
+    if (m < 12) return m + ' mesi';
+    const y = m/12;
+    // 1 anno (non "1 anni")
+    if (Math.abs(y - 1) < 0.05) return '1 anno';
+    return y.toLocaleString('it-IT',{maximumFractionDigits:1}) + ' anni';
+  }
+
+  // =========================
+  // CHARTS
+  // =========================
   function buildCharts(){
+    const commonGrid = { color: 'rgba(255,255,255,.08)' };
+    const commonTicks = { color: 'rgba(229,231,235,.85)' };
+
     costChart = new Chart(document.getElementById('costChart'), {
       type: 'line',
       data: {
         labels: Array.from({length: 11}, (_,i)=> String(i)),
         datasets: [
-          { label: 'Bottiglie', data: [], borderWidth: 3, tension: .25 },
-          { label: 'eSpring', data: [], borderWidth: 3, tension: .25 }
+          { label: 'Bottiglie', data: [], borderWidth: 3, tension: .25, borderColor: 'rgba(56,189,248,.95)' },
+          { label: 'eSpring', data: [], borderWidth: 3, tension: .25, borderColor: 'rgba(16,185,129,.95)' }
         ]
       },
       options: {
         responsive: true,
-        plugins: {
-          legend: { position: 'bottom', labels: { color: 'rgba(229,231,235,.85)' } }
-        },
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels:{ color:'rgba(229,231,235,.85)' } } },
         scales: {
-          x: { title: { display: true, text: 'Anni', color:'rgba(229,231,235,.75)' }, ticks:{ color:'rgba(229,231,235,.75)' }, grid:{ color:'rgba(255,255,255,.06)' } },
-          y: { title: { display: true, text: 'Costo totale (EUR)', color:'rgba(229,231,235,.75)' }, ticks:{ color:'rgba(229,231,235,.75)' }, grid:{ color:'rgba(255,255,255,.06)' } }
+          x: { ticks: commonTicks, grid: commonGrid, title: { display: true, text: 'Anni', color:'rgba(229,231,235,.85)' } },
+          y: { ticks: commonTicks, grid: commonGrid, title: { display: true, text: 'Costo totale (€)', color:'rgba(229,231,235,.85)' } }
         }
       }
     });
@@ -758,22 +614,49 @@
       type: 'bar',
       data: {
         labels: ['1 anno', '5 anni', '10 anni'],
-        datasets: [{ label: 'Bottigliette 500 ml evitate', data: [], borderWidth: 1 }]
+        datasets: [{
+          label: 'Bottigliette 500 ml evitate',
+          data: [],
+          borderWidth: 1,
+          backgroundColor: 'rgba(16,185,129,.25)',
+          borderColor: 'rgba(16,185,129,.85)'
+        }]
       },
       options: {
         responsive: true,
-        plugins: {
-          legend: { position: 'bottom', labels: { color:'rgba(229,231,235,.85)' } }
-        },
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels:{ color:'rgba(229,231,235,.85)' } } },
         scales: {
-          x: { ticks:{ color:'rgba(229,231,235,.75)' }, grid:{ color:'rgba(255,255,255,.06)' } },
-          y: { title: { display: true, text: 'N° bottigliette', color:'rgba(229,231,235,.75)' }, ticks:{ color:'rgba(229,231,235,.75)' }, grid:{ color:'rgba(255,255,255,.06)' } }
+          x:{ ticks: commonTicks, grid: commonGrid },
+          y:{ ticks: commonTicks, grid: commonGrid, title: { display: true, text: 'N° bottigliette', color:'rgba(229,231,235,.85)' } }
         }
       }
     });
   }
 
-  function updateUIInputs(){
+  // Export canvas in HD for PDF
+  function canvasToPngDataUrlHiDpi(canvas, scale = 3) {
+    const w = canvas.width;
+    const h = canvas.height;
+
+    const tmp = document.createElement("canvas");
+    tmp.width = w * scale;
+    tmp.height = h * scale;
+
+    const ctx = tmp.getContext("2d");
+    ctx.scale(scale, scale);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(canvas, 0, 0, w, h);
+
+    return tmp.toDataURL("image/png", 1.0);
+  }
+
+  // =========================
+  // CORE CALC (always accurate)
+  // =========================
+  function calcCore(){
     const priceBottle = parseFloat(els.priceBottle.value);
     const people = parseInt(els.people.value, 10);
     const drinkPerPerson = parseFloat(els.drinkPerPerson.value);
@@ -784,12 +667,6 @@
     els.drinkPerPersonVal.textContent = fmt1(drinkPerPerson);
     els.cookLitersVal.textContent = fmt1(cookLiters);
 
-    return { priceBottle, people, drinkPerPerson, cookLiters };
-  }
-
-  function calcCore(){
-    const { priceBottle, people, drinkPerPerson, cookLiters } = updateUIInputs();
-
     const litersDayDrink = people * drinkPerPerson;
     const litersDayTotal = litersDayDrink + cookLiters;
     const litersYear = litersDayTotal * 365;
@@ -799,164 +676,101 @@
     const cost5B = yearCostB * 5;
     const cost10B = yearCostB * 10;
 
-    // eSpring: “totale” include ricambi quando servono
+    // eSpring (include device + filters when needed)
+    const yearCostE_consumables = espringConsumablesYear1(litersYear);
     const cost5E = espringTotalCost(5, litersYear);
     const cost10E = espringTotalCost(10, litersYear);
 
-    // “1° anno eSpring” (consumabili stimati nel 1° anno)
-    const extraFiltersYear1 = totalExtraFiltersNeeded(litersYear);
-    const yearCostE = extraFiltersYear1 * ESPRING_FILTER;
-
-    // Risparmio totale
+    // Savings
     const save5 = cost5B - cost5E;
     const save10 = cost10B - cost10E;
 
-    // Risparmio per litro (media 5 anni)
+    // €/L diff (avg 5y)
     const avgCostPerLiterE_5y = cost5E / (litersYear * 5);
     const diffPerLiter = priceBottle - avgCostPerLiterE_5y;
     const percSavePerLiter = (diffPerLiter / priceBottle) * 100;
 
     // Break-even
-    const beInitialM = breakEvenInitialMonths(priceBottle, litersYear);
-    const beTotalM   = breakEvenTotalMonths(priceBottle, litersYear);
+    const beDeviceM = breakEvenDeviceMonths(priceBottle, litersYear);
+    const beTotalM  = breakEvenTotalMonths(priceBottle, litersYear);
 
-    // Bottigliette 500 ml evitate
+    // Bottles saved
     const bottlesSavedYear = litersYear / 0.5;
 
-    // Costi cumulati grafico
+    // Filters note
+    const extraFiltersYear1 = totalExtraFiltersNeeded(litersYear);
+
+    // Charts data
     const years = Array.from({length:11}, (_,i)=>i);
     const bottleCum = years.map(y => yearCostB * y);
     const espringCum = years.map(y => (y===0 ? 0 : espringTotalCost(y, litersYear)));
 
     return {
       priceBottle, people, drinkPerPerson, cookLiters,
-      litersYear, litersDayTotal,
-      yearCostB, yearCostE,
-      cost5B, cost5E,
-      cost10B, cost10E,
+      litersYear, bottlesSavedYear,
+      yearCostB, yearCostE_consumables,
+      cost5B, cost5E, cost10B, cost10E,
       save5, save10,
       diffPerLiter, percSavePerLiter,
-      beInitialM, beTotalM,
-      bottlesSavedYear,
+      beDeviceM, beTotalM,
       extraFiltersYear1,
       bottleCum, espringCum
     };
   }
 
-  function setHorizon(h){
-    selectedHorizon = h;
-    els.t5.classList.toggle('active', h===5);
-    els.t10.classList.toggle('active', h===10);
-    els.horizonLabel.textContent = (h===5?'5 anni':'10 anni');
-    if (lastData) renderResults(lastData, false);
-  }
+  function renderResults(d){
+    // Big savings
+    const big = (horizon === 5) ? d.save5 : d.save10;
+    els.bigSave.textContent = (big >= 0 ? fmtEUR(big) : ('-' + fmtEUR(Math.abs(big))));
+    els.bigHorizon.textContent = horizon + ' anni';
+    els.bigBE.textContent = beTextMonths(d.beDeviceM);
+    els.bigBottles.textContent = fmtNum(d.bottlesSavedYear);
 
-  function renderResults(d, animate=true){
-    lastData = d;
+    els.breakeven.textContent = beTextMonths(d.beDeviceM);
+    els.savePerLiter.textContent =
+      fmtEUR(d.diffPerLiter) + ' /L (' + d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1}) + '%)';
 
-    // Big Save (toggle)
-    const save = (selectedHorizon===5 ? d.save5 : d.save10);
-    els.saveHeroValue.textContent = (save >= 0 ? fmtEUR(save) : ('-' + fmtEUR(Math.abs(save))));
+    els.bottlesSavedYear.textContent = fmtNum(d.bottlesSavedYear);
+    els.litersYear.textContent = fmtNum(d.litersYear) + ' L/anno';
 
-    els.beInitialInline.textContent = beTextMonths(d.beInitialM);
-    els.beTotalInline.textContent   = beTextMonths(d.beTotalM);
-    els.bottlesInline.textContent   = fmtNum(d.bottlesSavedYear);
-
-    // KPI
-    els.breakevenInitial.textContent = beTextMonths(d.beInitialM);
-    els.breakevenInitial.classList.toggle('pos', d.beInitialM !== null && d.beInitialM <= 24);
-    els.breakevenInitial.classList.toggle('neg', d.beInitialM === null || d.beInitialM >= 48);
-
-    els.savePerLiter.textContent = fmtEUR(d.diffPerLiter) + ' /L (' + d.percSavePerLiter.toLocaleString('it-IT', {maximumFractionDigits:1}) + '%)';
-    els.savePerLiter.classList.toggle('pos', d.diffPerLiter >= 0);
-    els.savePerLiter.classList.toggle('neg', d.diffPerLiter < 0);
-
-    els.bottlesYear.textContent = fmtNum(d.bottlesSavedYear);
-    els.litersYearBig.textContent = fmtNum(d.litersYear) + ' L/anno';
-
-    // Table
-    els.litersYearB.textContent = fmtNum(d.litersYear) + ' L';
-    els.litersYearE.textContent = fmtNum(d.litersYear) + ' L';
-    els.yearCostB.textContent   = fmtEUR(d.yearCostB);
-    els.yearCostE.textContent   = fmtEUR(d.yearCostE);
-    els.cost5B.textContent      = fmtEUR(d.cost5B);
-    els.cost5E.textContent      = fmtEUR(d.cost5E);
-    els.cost10B.textContent     = fmtEUR(d.cost10B);
-    els.cost10E.textContent     = fmtEUR(d.cost10E);
-
-    // Filter note
+    // capacity note
     els.capacityNote.innerHTML =
-      `Con questi consumi, nel 1° anno si stimano <b>${d.extraFiltersYear1}</b> filtri aggiuntivi (0 se ≤ 5.000 L/anno). ` +
-      `Il 1° filtro è incluso nel dispositivo.`;
+      `Con questi consumi, nel 1° anno servono <b>${d.extraFiltersYear1}</b> filtri aggiuntivi (0 se ≤ 5.000 L/anno).`;
 
-    // Charts
+    // charts
     costChart.data.datasets[0].data = d.bottleCum;
     costChart.data.datasets[1].data = d.espringCum;
     costChart.update();
 
     bottleChart.data.datasets[0].data = [d.bottlesSavedYear, d.bottlesSavedYear*5, d.bottlesSavedYear*10];
     bottleChart.update();
-
-    if (animate){
-      els.resultsWrap.classList.remove('revealAnim');
-      void els.resultsWrap.offsetWidth;
-      els.resultsWrap.classList.add('revealAnim');
-    }
   }
 
   function showResults(){
-    if (!hasInteracted) return;
-    const d = calcCore();
-    if (!resultsShown){
-      els.resultsWrap.style.display = 'block';
-      els.resultsWrap.classList.add('revealAnim');
-      resultsShown = true;
-    }
-    renderResults(d, true);
+    if (!lastData) lastData = calcCore();
 
-    // scroll to results
+    els.resultsWrap.classList.remove('resultsHidden');
+    els.resultsWrap.classList.add('reveal');
+    setTimeout(()=>els.resultsWrap.classList.remove('reveal'), 420);
+
+    renderResults(lastData);
+
+    // micro-wow: glow the big box briefly
+    const bigBox = document.querySelector('.bigBox');
+    bigBox.style.boxShadow = "0 0 0 2px rgba(56,189,248,.18), 0 18px 45px rgba(16,185,129,.18)";
+    setTimeout(()=>bigBox.style.boxShadow = "", 550);
+
+    // scroll to results (mobile-friendly)
     setTimeout(()=>{
-      els.resultsCard.scrollIntoView({behavior:'smooth', block:'start'});
-    }, 50);
+      els.resultsWrap.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 120);
 
-    // enable PDF once results exist
-    els.downloadPdf.disabled = false;
+    els.calcHint.textContent = "Risultati aggiornati. Puoi generare il PDF cliente.";
   }
 
-  function summaryText(d){
-    const beI = beTextMonths(d.beInitialM);
-    const beT = beTextMonths(d.beTotalM);
-    const horizonSave = (selectedHorizon===5 ? d.save5 : d.save10);
-
-    return [
-      'Calcolatore ROI eSpring – Riepilogo',
-      `Prezzo bottiglie: ${d.priceBottle.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})} €/L`,
-      `Persone: ${d.people} • Bere: ${d.drinkPerPerson.toLocaleString('it-IT',{maximumFractionDigits:1})} L/pers/g • Cucina: ${d.cookLiters.toLocaleString('it-IT',{maximumFractionDigits:1})} L/g`,
-      `Consumo annuo: ${fmtNum(d.litersYear)} L`,
-      `Rientro investimento iniziale: ${beI}`,
-      `Rientro totale (incl. ricambi): ${beT}`,
-      `Risparmio totale ${selectedHorizon} anni: ${fmtEUR(horizonSave)}`,
-      `Bottigliette evitate/anno (stima): ${fmtNum(d.bottlesSavedYear)}`,
-      `Costo acqua dopo rientro (stima): circa 5 cent/L`
-    ].join('\n');
-  }
-
-  // ======= PDF (2 pagine) =======
-  function wrapText(doc, text, x, y, maxWidth, lineHeight){
-    const lines = doc.splitTextToSize(text, maxWidth);
-    doc.text(lines, x, y);
-    return y + (lines.length * lineHeight);
-  }
-
-  function safeNewLine(doc, y, add, top=14){
-    const pageH = doc.internal.pageSize.getHeight();
-    if (y + add > pageH - 14){
-      doc.addPage();
-      return top;
-    }
-    return y;
-  }
-
+  // =========================
+  // PDF HELPERS
+  // =========================
   async function loadImageAsDataURL(src){
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -974,379 +788,345 @@
     });
   }
 
+  async function addImageContain(doc, src, x, y, boxW, boxH){
+    const dataUrl = await loadImageAsDataURL(src);
+
+    const img = new Image();
+    await new Promise((res, rej)=>{ img.onload=res; img.onerror=rej; img.src=dataUrl; });
+
+    const imgRatio = img.naturalWidth / img.naturalHeight;
+    const boxRatio = boxW / boxH;
+
+    let w = boxW, h = boxH;
+    if (imgRatio > boxRatio) h = boxW / imgRatio;
+    else w = boxH * imgRatio;
+
+    const dx = x + (boxW - w)/2;
+    const dy = y + (boxH - h)/2;
+
+    doc.addImage(dataUrl, "PNG", dx, dy, w, h);
+  }
+
+  function openOrDownloadPdf(doc, filename) {
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    if (isIOS) {
+      window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+      return;
+    }
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5_000);
+  }
+
+  function addParagraph(doc, text, x, y, maxW, lineH = 5){
+    const lines = doc.splitTextToSize(text, maxW);
+    doc.text(lines, x, y);
+    return y + lines.length * lineH;
+  }
+
+  // =========================
+  // GENERATE PDF (2 pages, page2 fixed A4)
+  // =========================
   async function generatePdf(){
-    if (!lastData) showResults();
-    const d = lastData || calcCore();
+    if (!lastData) lastData = calcCore();
 
-    const abo = (els.aboPartner.value || '').trim();
-    const client = (els.clientName.value || '').trim();
-
+    const d = lastData;
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit:"mm", format:"a4" });
 
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
-    const left = 14;
-    const right = pageW - 14;
-    const maxW = pageW - 28;
+    const margin = 14;
 
-    // ------- PAGE 1 -------
+    // ---------- PAGE 1 ----------
     let y = 14;
 
-    // Header: logo left
+    // Header (logo + title, no overlap)
     try{
       const logo = await loadImageAsDataURL("espring-logo.png");
-      doc.addImage(logo, "PNG", left, 10, 36, 0);
+      doc.addImage(logo, "PNG", margin, y - 6, 14, 14);
     } catch(e){}
 
-    // Title
     doc.setFont("helvetica","bold");
-    doc.setFontSize(15);
-    doc.text("Riepilogo calcolo ROI eSpring", left, 30);
+    doc.setFontSize(16);
+    doc.text("Preventivo ROI eSpring (cliente)", margin + 18, y);
 
     doc.setFont("helvetica","normal");
-    doc.setFontSize(9.5);
-    doc.setTextColor(80);
-    doc.text("Copia riepilogativa per cliente", right, 30, { align:"right" });
+    doc.setFontSize(9);
+    doc.text("Copia riepilogativa per cliente", pageW - margin, y, { align: "right" });
 
-    doc.setTextColor(40);
+    y += 6;
     doc.setFontSize(10);
-    doc.text(`Data: ${new Date().toLocaleString("it-IT")}`, left, 36);
+    doc.text(`Data: ${new Date().toLocaleString("it-IT")}`, margin + 18, y);
 
-    y = 44;
-
-    // Scenario box
-    doc.setDrawColor(210);
-    doc.setFillColor(245, 247, 252);
-    doc.rect(left, y, maxW, 34, "FD");
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(11);
-    doc.setTextColor(15);
-    doc.text("Scenario inserito", left+4, y+7);
-
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(10);
-    doc.setTextColor(30);
-
-    let sx = left + 4;
-    let sy = y + 13;
-
-    const scenLines = [
-      `Prezzo acqua in bottiglia: ${d.priceBottle.toLocaleString("it-IT",{minimumFractionDigits:2, maximumFractionDigits:2})} €/L`,
-      `Numero persone: ${d.people}`,
-      `Bere: ${d.drinkPerPerson.toLocaleString("it-IT",{maximumFractionDigits:1})} L/persona/giorno`,
-      `Cucinare: ${d.cookLiters.toLocaleString("it-IT",{maximumFractionDigits:1})} L/giorno (famiglia)`,
-      `Consumo totale: ${fmtNum(d.litersYear)} L/anno`
-    ];
-    doc.text(scenLines, sx, sy);
+    y += 6;
+    doc.setDrawColor(220);
+    doc.line(margin, y, pageW - margin, y);
+    y += 10;
 
     // Optional names
-    doc.setFontSize(9.8);
-    doc.setTextColor(60);
-    const who = [];
-    if (client) who.push(`Cliente: ${client}`);
-    if (abo) who.push(`Nome ABO Partner: ${abo}`);
-    if (who.length){
-      doc.text(who.join("  •  "), left+4, y+32);
-    }
+    const abo = (els.aboName.value || "").trim();
+    const cli = (els.clientName.value || "").trim();
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(10);
 
-    y += 44;
+    if (cli) { doc.text(`Cliente: ${cli}`, margin, y); y += 6; }
+    if (abo) { doc.text(`Nome ABO Partner: ${abo}`, margin, y); y += 6; }
+    if (cli || abo) { y += 2; }
 
-    // Results HERO box
-    const save5 = d.save5;
-    const save10 = d.save10;
-    const beI = beTextMonths(d.beInitialM);
-    const beT = beTextMonths(d.beTotalM);
+    // Scenario block
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(12);
+    doc.text("Scenario inserito", margin, y);
+    y += 7;
 
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(10);
+    const scen = [
+      `Prezzo bottiglie: ${d.priceBottle.toLocaleString("it-IT",{minimumFractionDigits:2, maximumFractionDigits:2})} €/L`,
+      `Persone: ${d.people}`,
+      `Bere: ${d.drinkPerPerson.toLocaleString("it-IT",{maximumFractionDigits:1})} L/persona/giorno`,
+      `Cucina: ${d.cookLiters.toLocaleString("it-IT",{maximumFractionDigits:1})} L/giorno`,
+      `Consumo: ${fmtNum(d.litersYear)} L/anno`,
+    ];
+    doc.text(scen, margin, y);
+    y += scen.length * 5.2 + 4;
+
+    // Results highlight box
+    const boxW = pageW - margin*2;
+    const boxH = 36;
     doc.setDrawColor(16, 185, 129);
-    doc.setFillColor(233, 250, 244);
-    doc.rect(left, y, maxW, 44, "FD");
+    doc.setFillColor(235, 250, 245);
+    doc.roundedRect(margin, y, boxW, boxH, 3, 3, "FD");
 
     doc.setFont("helvetica","bold");
-    doc.setTextColor(10, 70, 45);
-    doc.setFontSize(11);
-    doc.text("RISPARMIO TOTALE STIMATO (BOTTIGLIE – eSPRING)", left+4, y+8);
-
-    doc.setFontSize(20);
-    doc.setTextColor(10, 120, 85);
-    // default show 5y as main in PDF
-    doc.text(`${save5 >= 0 ? fmtEUR(save5) : '-' + fmtEUR(Math.abs(save5))}`.replace("€","EUR"), left+4, y+20);
+    doc.setFontSize(12);
+    doc.text("Risultati principali", margin + 5, y + 9);
 
     doc.setFont("helvetica","normal");
     doc.setFontSize(10);
-    doc.setTextColor(20);
-    const sub = `Orizzonte: 5 anni   •   Rientro investimento iniziale: ${beI}   •   Bottigliette/anno: ${fmtNum(d.bottlesSavedYear)}`;
-    y = wrapText(doc, sub, left+4, y+28, maxW-8, 5);
 
-    doc.setFontSize(9.8);
-    doc.setTextColor(55);
-    const micro = `Dopo il rientro: costo acqua legato ai ricambi ≈ 5 cent/L (stima). Nel lungo periodo il risparmio si consolida e aumenta.`;
-    y = wrapText(doc, micro, left+4, y+5, maxW-8, 4.6);
+    const line1 = `Rientro investimento iniziale: ${beTextMonths(d.beDeviceM)}`;
+    const line2 = `Risparmio totale 5 anni: ${fmtEUR(d.save5)}`;
+    const line3 = `Risparmio totale 10 anni: ${fmtEUR(d.save10)}`;
+    const line4 = `Bottigliette evitate/anno: ${fmtNum(d.bottlesSavedYear)}`;
 
+    doc.text(line1, margin + 5, y + 16);
+    doc.text(line2, margin + 5, y + 22);
+    doc.text(line3, margin + 5, y + 28);
+    doc.text(line4, margin + 5, y + 34);
+
+    y += boxH + 10;
+
+    // Short closing (neutral)
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
+    doc.text("Nota", margin, y);
     y += 6;
-
-    // KPI lines (5y and 10y)
-    y = safeNewLine(doc, y, 26);
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(11);
-    doc.setTextColor(20);
-    doc.text("Indicatori principali", left, y);
-
-    y += 7;
     doc.setFont("helvetica","normal");
     doc.setFontSize(10);
-    doc.setTextColor(30);
 
-    const avgCostPerLiterE_5y = d.cost5E / (d.litersYear * 5);
-    const diffPerLiter = d.priceBottle - avgCostPerLiterE_5y;
-    const perc = (diffPerLiter / d.priceBottle) * 100;
+    const noteText =
+      "Nel lungo periodo il risparmio si consolida e aumenta. " +
+      "Il dispositivo include il 1° filtro; i ricambi vengono considerati quando i litri cumulati superano multipli di 5.000 L. " +
+      "Dopo il rientro, il costo è legato principalmente ai ricambi: ≈ 5 cent/L (stima arrotondata).";
+    y = addParagraph(doc, noteText, margin, y, boxW, 5.2);
 
-    const kpiLines = [
-      `Rientro investimento iniziale (dispositivo + 1° filtro incluso): ${beI}`,
-      `Rientro totale (includendo ricambi quando si supera 5.000 L): ${beT}`,
-      `Differenza media EUR/L (5 anni): ${fmtEUR(diffPerLiter)} /L (${perc.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`.replace("€","EUR"),
-      `Risparmio totale: 5 anni ${fmtEUR(save5)}   •   10 anni ${fmtEUR(save10)}`.replaceAll("€","EUR")
-    ];
-    let tmpY = y;
-    for (const line of kpiLines){
-      tmpY = wrapText(doc, line, left, tmpY, maxW, 5.2);
-    }
-    y = tmpY + 3;
-
-    // Costs short table
-    y = safeNewLine(doc, y, 32);
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(11);
-    doc.setTextColor(20);
-    doc.text("Dettaglio costi (stima)", left, y);
-    y += 7;
-
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(10);
-    doc.setTextColor(30);
-
-    const rows = [
-      ["Costo annuo bottiglie", fmtEUR(d.yearCostB).replace("€","EUR")],
-      ["Costo annuo eSpring (1° anno, solo ricambi)", fmtEUR(d.yearCostE).replace("€","EUR")],
-      ["Totale 5 anni (bottiglie / eSpring)", `${fmtEUR(d.cost5B).replace("€","EUR")}  /  ${fmtEUR(d.cost5E).replace("€","EUR")}`],
-      ["Totale 10 anni (bottiglie / eSpring)", `${fmtEUR(d.cost10B).replace("€","EUR")}  /  ${fmtEUR(d.cost10E).replace("€","EUR")}`],
-    ];
-
-    const col1W = 90;
-    const col2W = maxW - col1W;
-    const rowH = 7.5;
-
-    doc.setDrawColor(220);
-    doc.setFillColor(250,250,252);
-
-    // header
-    doc.rect(left, y, maxW, rowH, "FD");
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(10);
-    doc.text("Voce", left+2, y+5.2);
-    doc.text("Valore", left+col1W+2, y+5.2);
-    y += rowH;
-
-    doc.setFont("helvetica","normal");
-    for (const r of rows){
-      y = safeNewLine(doc, y, rowH);
-      doc.rect(left, y, maxW, rowH, "S");
-      doc.text(doc.splitTextToSize(r[0], col1W-4), left+2, y+5.2);
-      doc.text(doc.splitTextToSize(r[1], col2W-4), left+col1W+2, y+5.2);
-      y += rowH;
-    }
-
-    y += 8;
-    y = safeNewLine(doc, y, 22);
-
-    // Next step (neutral closing)
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(11);
-    doc.setTextColor(20);
-    doc.text("Prossimo passo", left, y);
-    y += 6;
-
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(10);
-    doc.setTextColor(40);
-
-    const closing = "Se desideri, possiamo rivedere insieme i parametri e definire la soluzione più adatta. Per qualsiasi domanda, resto a disposizione.";
-    y = wrapText(doc, closing, left, y, maxW, 5.2);
-
-    y += 8;
-    doc.setFontSize(9.5);
-    doc.setTextColor(80);
-    const contactLine = `Contatti consulenza: ${abo ? abo : "Nome ABO Partner"}  •  Tel: __________  •  Email: __________`;
-    y = wrapText(doc, contactLine, left, y, maxW, 4.8);
-
-    // Footer note
-    doc.setFontSize(8.8);
+    // Footer
+    doc.setFontSize(8);
     doc.setTextColor(120);
-    doc.text("Stima basata sui dati inseriti. Per dettagli e certificazioni fare riferimento alla documentazione ufficiale allegata.", left, pageH-10);
+    doc.text("Copia riepilogativa per cliente", margin, pageH - 12);
+    doc.setTextColor(0);
 
-    // ------- PAGE 2 -------
+    // ---------- PAGE 2 (fixed 1 A4) ----------
     doc.addPage();
-    y = 14;
 
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(13);
-    doc.setTextColor(20);
-    doc.text("Approfondimenti (allegati)", left, y);
-    y += 8;
+    let y2 = 14;
 
-    // Add chart image (cost chart canvas)
+    // Header page 2
     try{
-      // ensure chart is drawn
-      costChart.update();
-      const chartDataUrl = document.getElementById('costChart').toDataURL('image/png', 1.0);
-      const imgProps = doc.getImageProperties(chartDataUrl);
-      const imgW = maxW;
-      const imgH = (imgProps.height * imgW) / imgProps.width;
-
-      doc.setDrawColor(220);
-      doc.setFillColor(250,250,252);
-      doc.rect(left, y, maxW, Math.min(70, imgH + 10), "FD");
-
-      doc.setFont("helvetica","bold");
-      doc.setFontSize(10.5);
-      doc.setTextColor(30);
-      doc.text("Grafico costi cumulati (0–10 anni)", left+4, y+7);
-
-      const targetY = y + 12;
-      const maxChartH = 56;
-      const drawH = Math.min(maxChartH, imgH);
-      doc.addImage(chartDataUrl, "PNG", left+4, targetY, maxW-8, drawH);
-
-      y = y + 12 + drawH + 10;
-    } catch(e){
-      // if chart fails, continue
-      y += 6;
-    }
-
-    y = safeNewLine(doc, y, 44);
-
-    // Prestazioni (sintesi) - paraphrase from infografica, no #1 claim
-    doc.setDrawColor(220);
-    doc.setFillColor(250,250,252);
-    doc.rect(left, y, maxW, 46, "FD");
+      const logo2 = await loadImageAsDataURL("espring-logo.png");
+      doc.addImage(logo2, "PNG", margin, y2 - 6, 14, 14);
+    } catch(e){}
 
     doc.setFont("helvetica","bold");
-    doc.setFontSize(11);
-    doc.setTextColor(20);
-    doc.text("Prestazioni (sintesi)", left+4, y+8);
+    doc.setFontSize(14);
+    doc.text("Approfondimenti eSpring", margin + 18, y2);
 
     doc.setFont("helvetica","normal");
-    doc.setFontSize(10);
-    doc.setTextColor(35);
+    doc.setFontSize(9);
+    doc.text("Pagina 2/2", pageW - margin, y2, { align: "right" });
 
-    const bullets = [
-      "Tecnologia a LED UV-C + Filtro al Carbone e3 per acqua pulita e dal sapore eccezionale.",
-      "Riduzione microbica (riferimenti): fino a 99,9999% batteri • 99,99% virus • 99,9% cisti (vedi documenti ufficiali).",
-      "Riduce efficacemente 170+ contaminanti, tra cui microplastiche, PFOA e PFOS e prodotti farmaceutici (vedi documenti ufficiali).",
-      "Trattiene i minerali benefici. Un filtro può trattare fino a circa 5.000 L (in base al consumo)."
-    ];
+    y2 += 8;
+    doc.setDrawColor(220);
+    doc.line(margin, y2, pageW - margin, y2);
+    y2 += 10;
 
-    let by = y + 15;
-    for (const b of bullets){
-      by = wrapText(doc, "• " + b, left+6, by, maxW-12, 5.0);
-    }
+    // Graph (70mm)
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
+    doc.text("Andamento costi cumulati (0–10 anni)", margin, y2);
+    y2 += 5;
 
-    y = y + 46 + 8;
-    y = safeNewLine(doc, y, 110);
-
-    // Certificazioni image as third block
+    const chartH = 70;
     try{
-      const cert = await loadImageAsDataURL("certificazioni.png");
-      const p = doc.getImageProperties(cert);
-      const imgW = maxW;
-      const imgH = (p.height * imgW) / p.width;
-
-      doc.setFont("helvetica","bold");
-      doc.setFontSize(11);
-      doc.setTextColor(20);
-      doc.text("Certificazioni (immagine)", left, y);
-
-      y += 6;
-      const maxH = pageH - y - 16;
-      const drawH = Math.min(imgH, maxH);
-      doc.addImage(cert, "PNG", left, y, imgW, drawH);
-
+      const canvas = document.getElementById("costChart");
+      const chartImg = canvasToPngDataUrlHiDpi(canvas, 3);
+      doc.addImage(chartImg, "PNG", margin, y2, pageW - margin*2, chartH);
     } catch(e){
       doc.setFont("helvetica","normal");
       doc.setFontSize(10);
-      doc.setTextColor(80);
-      doc.text("Immagine certificazioni non disponibile.", left, y);
+      doc.text("Grafico non disponibile.", margin, y2 + 10);
+    }
+    y2 += chartH + 10;
+
+    // Prestazioni (compact 28mm)
+    const perfH = 28;
+    doc.setDrawColor(230);
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(margin, y2, boxW, perfH, 3, 3, "FD");
+
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
+    doc.text("Prestazioni (sintesi)", margin + 4, y2 + 7);
+
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(9);
+    doc.text("• Riduce 170+ contaminanti (incluse microplastiche, PFOA/PFOS e prodotti farmaceutici).", margin + 4, y2 + 13);
+    doc.text("• Trattiene i minerali benefici naturalmente presenti nell’acqua.", margin + 4, y2 + 18);
+    doc.text("• Capacità filtro: fino a ~5.000 L (in base all’uso) ≈ 10.000 bottigliette da 500 ml.", margin + 4, y2 + 23);
+
+    y2 += perfH + 10;
+
+    // Certificazioni image (contain, 105mm fixed)
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
+    doc.text("Certificazioni (estratto)", margin, y2);
+    y2 += 5;
+
+    const certH = 105;
+    doc.setDrawColor(230);
+    doc.setFillColor(255,255,255);
+    doc.roundedRect(margin, y2, boxW, certH, 3, 3, "FD");
+
+    try{
+      await addImageContain(doc, "certificazioni.png", margin, y2, boxW, certH);
+    } catch(e){
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(10);
+      doc.text("Immagine certificazioni non disponibile.", margin + 4, y2 + 12);
     }
 
+    // Footer page 2
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(8);
+    doc.setTextColor(120);
+    doc.text("Documento di supporto alla consulenza. Allegati: Infografica e Prestazioni.", margin, pageH - 12);
+    doc.setTextColor(0);
+
+    // Save/open
     const fname = `Preventivo-ROI-eSpring-Cliente-${new Date().toISOString().slice(0,10)}.pdf`;
-    doc.save(fname);
+    openOrDownloadPdf(doc, fname);
   }
 
-  // ======= EVENTS / WOW LOGIC =======
-  function markInteracted(){
-    if (!hasInteracted){
-      hasInteracted = true;
-      els.calcBtn.disabled = false;
-      els.calcBtn.classList.add('wowReady');
-      els.calcHint.textContent = 'Ora premi “Calcola risultati”.';
+  // =========================
+  // SHARE / COPY
+  // =========================
+  function summaryText(d){
+    const abo = (els.aboName.value || "").trim();
+    const cli = (els.clientName.value || "").trim();
+    const lines = [];
+    lines.push("Calcolatore ROI eSpring – Team Longobardi");
+    if (cli) lines.push(`Cliente: ${cli}`);
+    if (abo) lines.push(`Nome ABO Partner: ${abo}`);
+    lines.push(`Scenario: ${d.people} persone; bere ${d.drinkPerPerson.toLocaleString('it-IT',{maximumFractionDigits:1})} L/persona/giorno; cucina ${d.cookLiters.toLocaleString('it-IT',{maximumFractionDigits:1})} L/giorno; bottiglie ${d.priceBottle.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})} €/L`);
+    lines.push(`Consumo: ${fmtNum(d.litersYear)} L/anno`);
+    lines.push(`Rientro investimento iniziale: ${beTextMonths(d.beDeviceM)}`);
+    lines.push(`Risparmio totale: 5 anni ${fmtEUR(d.save5)} | 10 anni ${fmtEUR(d.save10)}`);
+    lines.push(`Bottigliette 500 ml evitate/anno: ${fmtNum(d.bottlesSavedYear)}`);
+    return lines.join("\n");
+  }
+
+  // =========================
+  // EVENTS
+  // =========================
+  function refreshLiveValues(){
+    // keep slider live values updated
+    const d = calcCore();
+    lastData = d;
+    // don't auto-show results (theatricality): only after button click
+    // but keep charts data ready
+    if (costChart && bottleChart) {
+      costChart.data.datasets[0].data = d.bottleCum;
+      costChart.data.datasets[1].data = d.espringCum;
+      costChart.update('none');
+
+      bottleChart.data.datasets[0].data = [d.bottlesSavedYear, d.bottlesSavedYear*5, d.bottlesSavedYear*10];
+      bottleChart.update('none');
     }
   }
 
   ['input','change'].forEach(evt=>{
     ['priceBottle','people','drinkPerPerson','cookLiters'].forEach(id=>{
-      document.getElementById(id).addEventListener(evt, ()=>{
-        markInteracted();
-        updateUIInputs();
-        // keep results live once shown
-        if (resultsShown){
-          const d = calcCore();
-          renderResults(d, false);
-        }
-      });
+      document.getElementById(id).addEventListener(evt, refreshLiveValues);
     });
   });
 
-  // also count typing in names as interaction
-  ['input','change'].forEach(evt=>{
-    els.aboPartner.addEventListener(evt, markInteracted);
-    els.clientName.addEventListener(evt, markInteracted);
-  });
-
   els.calcBtn.addEventListener('click', ()=>{
+    lastData = calcCore();
     showResults();
   });
 
-  els.downloadPdf.addEventListener('click', async ()=>{
-    try{
-      await generatePdf();
-    } catch(e){
-      alert("Impossibile generare il PDF. Verifica che espring-logo.png e certificazioni.png siano presenti e accessibili.");
-    }
+  els.pdfBtn.addEventListener('click', async ()=>{
+    // If user didn't reveal results, still generate with current data
+    lastData = calcCore();
+    await generatePdf();
   });
 
   els.copy.addEventListener('click', async ()=>{
-    const d = lastData || (resultsShown ? lastData : calcCore());
-    const txt = summaryText(d);
+    lastData = calcCore();
+    const txt = summaryText(lastData);
     try{
       await navigator.clipboard.writeText(txt);
       els.copy.textContent = 'Copiato';
-      setTimeout(()=>els.copy.textContent='Copia riepilogo',900);
+      setTimeout(()=>els.copy.textContent='Copia riepilogo', 900);
     } catch(e){ alert(txt); }
   });
 
   els.share.addEventListener('click', ()=>{
-    const d = lastData || (resultsShown ? lastData : calcCore());
-    const url = 'https://wa.me/?text=' + encodeURIComponent(summaryText(d));
+    lastData = calcCore();
+    const url = 'https://wa.me/?text=' + encodeURIComponent(summaryText(lastData));
     window.open(url, '_blank');
   });
 
-  // Toggle
+  // Toggle 5/10
+  function setHorizon(h){
+    horizon = h;
+    els.t5.classList.toggle('active', h===5);
+    els.t10.classList.toggle('active', h===10);
+    if (lastData) renderResults(lastData);
+  }
   els.t5.addEventListener('click', ()=>setHorizon(5));
   els.t10.addEventListener('click', ()=>setHorizon(10));
 
-  // Init
+  // INIT
   buildCharts();
-  updateUIInputs();
+  refreshLiveValues();
+
+  // small safety: ensure calc button never stuck disabled
+  setTimeout(()=> {
+    els.calcBtn.classList.remove('disabled');
+  }, 400);
 </script>
 </body>
 </html>
