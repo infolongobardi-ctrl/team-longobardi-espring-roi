@@ -79,7 +79,7 @@
 
     .hero{
       position:relative;
-      min-height: 560px;
+      min-height:560px;
       background:
         radial-gradient(900px 520px at 20% 0%, rgba(56,189,248,.18) 0%, rgba(56,189,248,0) 62%),
         radial-gradient(900px 520px at 80% 10%, rgba(16,185,129,.16) 0%, rgba(16,185,129,0) 62%),
@@ -312,7 +312,7 @@
           </div>
 
           <div class="heroNote">
-            Il sistema di trattamento dell’acqua più venduto al mondo.
+            Il sistema di trattamento dell'acqua più venduto al mondo.
           </div>
         </div>
       </section>
@@ -404,12 +404,12 @@
             <div class="s">Calcolato sul costo iniziale del dispositivo.</div>
           </div>
           <div class="kpi">
-            <div class="t">Risparmio medio sui costi dell’acqua (5 anni)</div>
+            <div class="t">Risparmio medio sui costi dell'acqua (5 anni)</div>
             <div class="n good" id="savePerLiter">—</div>
-            <div class="s">Differenza media rispetto all’acqua in bottiglia.</div>
+            <div class="s">Rispetto ai costi dell'acqua in bottiglia.</div>
           </div>
           <div class="kpi">
-            <div class="t">Riduzione dell’uso di plastica monouso</div>
+            <div class="t">Riduzione dell'uso di plastica monouso</div>
             <div class="n" id="bottlesYear">—</div>
             <div class="s">Bottiglie da 500 ml evitate ogni anno.</div>
           </div>
@@ -486,8 +486,8 @@
           </div>
           <div class="benefit">
             <div class="tag">Sostenibilità</div>
-            <h3>Riduzione dell’uso di plastica monouso</h3>
-            <p>Scelta più sostenibile per l’uso quotidiano, con minore utilizzo di bottiglie in plastica.</p>
+            <h3>Riduzione dell'uso di plastica monouso</h3>
+            <p>Scelta più sostenibile per l'uso quotidiano, con minore utilizzo di bottiglie in plastica.</p>
           </div>
         </div>
 
@@ -524,6 +524,11 @@
     return `${years} anno${years > 1 ? 'i' : ''} e ${months} mesi`;
   }
 
+  function formatSavingsPercent(p){
+    const abs = Math.abs(p).toLocaleString('it-IT', {maximumFractionDigits:1});
+    return p >= 0 ? `-${abs}%` : `+${abs}%`;
+  }
+
   function totalExtraFiltersNeeded(totalLiters){
     return Math.max(0, Math.ceil(totalLiters / FILTER_CAPACITY_L) - 1);
   }
@@ -545,6 +550,11 @@
       if (ESPRING_DEVICE <= bottleCost) return m;
     }
     return null;
+  }
+
+  function filterDurationMonths(litersYear){
+    if (!litersYear || litersYear <= 0) return null;
+    return Math.round((FILTER_CAPACITY_L / litersYear) * 12);
   }
 
   const els = {
@@ -603,17 +613,46 @@
       data: {
         labels: Array.from({length: 11}, (_,i)=> String(i)),
         datasets: [
-          { label: 'Bottiglie', data: [], borderWidth: 3, tension: .25, pointRadius: 2 },
-          { label: 'eSpring',   data: [], borderWidth: 3, tension: .25, pointRadius: 2 }
+          {
+            label: 'eSpring',
+            data: [],
+            borderWidth: 3,
+            tension: .25,
+            pointRadius: 2,
+            borderColor: '#10B981',
+            backgroundColor: 'rgba(16,185,129,.15)'
+          },
+          {
+            label: 'Bottiglie',
+            data: [],
+            borderWidth: 3,
+            tension: .25,
+            pointRadius: 2,
+            borderColor: '#F59E0B',
+            backgroundColor: 'rgba(245,158,11,.15)'
+          }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom', labels: { color: 'rgba(229,231,235,.85)' } } },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: 'rgba(229,231,235,.85)' }
+          }
+        },
         scales: {
-          x: { ticks: { color:'rgba(229,231,235,.70)' }, grid: { color:'rgba(255,255,255,.06)' }, title:{ display:true, text:'Anni', color:'rgba(229,231,235,.75)' } },
-          y: { ticks: { color:'rgba(229,231,235,.70)' }, grid: { color:'rgba(255,255,255,.06)' }, title:{ display:true, text:'Costo totale (€)', color:'rgba(229,231,235,.75)' } }
+          x: {
+            ticks: { color:'rgba(229,231,235,.70)' },
+            grid: { color:'rgba(255,255,255,.06)' },
+            title:{ display:true, text:'Anni', color:'rgba(229,231,235,.75)' }
+          },
+          y: {
+            ticks: { color:'rgba(229,231,235,.70)' },
+            grid: { color:'rgba(255,255,255,.06)' },
+            title:{ display:true, text:'Costo totale (€)', color:'rgba(229,231,235,.75)' }
+          }
         }
       }
     });
@@ -652,6 +691,7 @@
     const beDeviceM = breakEvenMonthsDeviceOnly(priceBottle, litersYear);
     const bottlesSavedYear = litersYear / 0.5;
     const extraFiltersYear1 = totalExtraFiltersNeeded(litersYear);
+    const filterMonths = filterDurationMonths(litersYear);
 
     return {
       priceBottle, people, drinkPerPerson, cookLiters,
@@ -661,7 +701,8 @@
       diffPerLiter, percSavePerLiter,
       beDeviceM,
       extraFiltersYear1,
-      avgCostPerLiterE_5y
+      avgCostPerLiterE_5y,
+      filterMonths
     };
   }
 
@@ -674,8 +715,7 @@
       `Orizzonte selezionato: ${horizonYears} anni • Break-even (rientro dell’investimento): ${beTextMonths(d.beDeviceM)}`;
 
     els.breakeven.textContent = beTextMonths(d.beDeviceM);
-    els.savePerLiter.textContent =
-      `${fmtEUR(d.diffPerLiter)} /L (${d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}% sui costi dell’acqua)`;
+    els.savePerLiter.textContent = formatSavingsPercent(d.percSavePerLiter);
 
     els.bottlesYear.textContent = fmtNum(d.bottlesSavedYear);
     els.litersYearOut.textContent = fmtNum(d.litersYear) + ' L/anno';
@@ -689,8 +729,9 @@
     els.cost10B.textContent = fmtEUR(d.cost10B);
     els.cost10E.textContent = fmtEUR(d.cost10E);
 
+    const filterText = d.filterMonths ? beTextMonths(d.filterMonths) : 'dato non disponibile';
     els.capacityNote.innerHTML =
-      `Nel 1° anno servono <b>${d.extraFiltersYear1}</b> filtri aggiuntivi (0 se ≤ 5.000 L/anno). Il primo filtro è incluso nel dispositivo.`;
+      `Un filtro copre fino a <b>5.000 L</b>. Con questo consumo: <b>circa ${filterText}</b>. Il primo filtro e' incluso nel dispositivo.`;
 
     els.closingLine.textContent = 'Possibilità di soluzioni di pagamento flessibili.';
 
@@ -698,8 +739,8 @@
     const bottleCum = years.map(y => d.yearCostB * y);
     const espringCum = years.map(y => (y===0 ? 0 : espringTotalCost(y, d.litersYear)));
 
-    costChart.data.datasets[0].data = bottleCum;
-    costChart.data.datasets[1].data = espringCum;
+    costChart.data.datasets[0].data = espringCum;
+    costChart.data.datasets[1].data = bottleCum;
     costChart.update('none');
   }
 
@@ -795,7 +836,7 @@
     doc.setFont("helvetica","bold");
     doc.setFontSize(16);
     doc.setTextColor(0,0,0);
-    doc.text("Riepilogo consulenza – Calcolo ROI eSpring", M + 24, 18);
+    doc.text("Riepilogo consulenza - Calcolo ROI eSpring", M + 24, 18);
 
     doc.setFont("helvetica","normal");
     doc.setFontSize(10);
@@ -811,7 +852,7 @@
     doc.setFont("helvetica","bold");
     doc.setFontSize(12);
     doc.setTextColor(0,0,0);
-    doc.text("RISPARMIO TOTALE STIMATO (BOTTIGLIE – eSPRING)", boxX + 6, boxY + 10);
+    doc.text("RISPARMIO TOTALE STIMATO (BOTTIGLIE - eSPRING)", boxX + 6, boxY + 10);
 
     const saveSel = (horizonYears === 5) ? d.save5 : d.save10;
     doc.setFontSize(26);
@@ -828,24 +869,23 @@
 
     doc.setFont("helvetica","bold");
     doc.setFontSize(10.5);
-    doc.text("Break-even (rientro dell’investimento)", kRight, ky, { align:"right" });
+    doc.text("Break-even (rientro dell'investimento)", kRight, ky, { align:"right" });
     doc.setFont("helvetica","normal");
     doc.text(beTextMonths(d.beDeviceM), kRight, ky + 5.8, { align:"right" });
 
     ky += 14;
 
     doc.setFont("helvetica","bold");
-    doc.text("Risparmio medio sui costi dell’acqua (5 anni)", kRight, ky, { align:"right" });
+    doc.text("Risparmio medio sui costi dell'acqua (5 anni)", kRight, ky, { align:"right" });
     doc.setFont("helvetica","normal");
-    doc.text(`${fmtEUR(d.diffPerLiter)} /L (${d.percSavePerLiter.toLocaleString('it-IT',{maximumFractionDigits:1})}%)`,
-            kRight, ky + 5.8, { align:"right" });
+    doc.text(formatSavingsPercent(d.percSavePerLiter), kRight, ky + 5.8, { align:"right" });
 
     ky += 14;
 
     doc.setFont("helvetica","bold");
     doc.text("Riduzione plastica monouso", kRight, ky, { align:"right" });
     doc.setFont("helvetica","normal");
-    doc.text(`≈ ${fmtNum(d.bottlesSavedYear)} bottiglie da 500 ml/anno`, kRight, ky + 5.8, { align:"right" });
+    doc.text(`circa ${fmtNum(d.bottlesSavedYear)} bottiglie da 500 ml/anno`, kRight, ky + 5.8, { align:"right" });
 
     let y = boxY + boxH + 14;
     doc.setFont("helvetica","bold");
@@ -861,7 +901,7 @@
       const a = [];
       if (client) a.push(`Cliente: ${client}`);
       if (abo) a.push(`Nome consulente e codice: ${abo}`);
-      doc.text(a.join("   •   "), M, y);
+      doc.text(a.join("   -   "), M, y);
       y += 6;
     }
 
@@ -903,9 +943,10 @@
     doc.setFontSize(9.5);
     doc.setTextColor(80,80,80);
 
+    const filterText = d.filterMonths ? beTextMonths(d.filterMonths) : 'dato non disponibile';
     const noteTxt =
-      `Nel 1° anno servono ${d.extraFiltersYear1} filtri aggiuntivi (0 se ≤ 5.000 L/anno). ` +
-      `Il primo filtro è incluso nel dispositivo.`;
+      `Un filtro copre fino a 5.000 L. Con questo consumo: circa ${filterText}. ` +
+      `Il primo filtro e' incluso nel dispositivo.`;
 
     const noteLines = doc.splitTextToSize(noteTxt, tw);
     doc.text(noteLines, M, y + 8);
@@ -919,7 +960,7 @@
     y += 6;
     doc.setFont("helvetica","normal");
     doc.setFontSize(10.5);
-    doc.text("Possibilità di soluzioni di pagamento flessibili.", M, y, { maxWidth: tw });
+    doc.text("Possibilita di soluzioni di pagamento flessibili.", M, y, { maxWidth: tw });
 
     y += 7;
     doc.text("Hai 90 giorni per provarlo: se non sei soddisfatto, rimborso completo.", M, y, { maxWidth: tw });
@@ -967,7 +1008,7 @@
     doc.setFont("helvetica","normal");
     doc.setFontSize(10);
     doc.setTextColor(80,80,80);
-    doc.text("Estratto visivo – dettagli completi nei documenti ufficiali.", M, chartBoxY + chartBoxH + 22);
+    doc.text("Estratto visivo - dettagli completi nei documenti ufficiali.", M, chartBoxY + chartBoxH + 22);
 
     const certBoxX = M, certBoxY = chartBoxY + chartBoxH + 28, certBoxW = tw, certBoxH = pageH - certBoxY - 18;
     doc.setDrawColor(210,220,230);
