@@ -57,8 +57,17 @@
       box-shadow: var(--shadow2);
     }
     .miniBtn:hover{filter:brightness(1.05);text-decoration:none}
-    .miniBtn.primary{border-color:rgba(16,185,129,.35); background:rgba(16,185,129,.10)}
-    .miniBtn.secondary{border-color:rgba(56,189,248,.35); background:rgba(56,189,248,.10)}
+.miniBtn.primary{
+  border-color:rgba(16,185,129,.45);
+  background:linear-gradient(90deg, rgba(16,185,129,.85) 0%, rgba(16,185,129,.55) 100%);
+  color:#ffffff;
+  box-shadow: 0 10px 25px rgba(16,185,129,.35);
+}
+.miniBtn.secondary{
+  border-color:rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05);
+  color:rgba(255,255,255,.85);
+}
 
     .grid{display:grid;grid-template-columns: 1.25fr .95fr; gap:14px;}
     @media (max-width: 980px){.grid{grid-template-columns:1fr}}
@@ -492,8 +501,8 @@
         </div>
 
         <div class="deepLinks">
-<a class="miniBtn primary" href="Infografica-Generale-eSpring.pdf" download>Prestazioni del sistema (PDF)</a>
-<a class="miniBtn secondary" href="prestazioni-espring.pdf" download>Analisi e certificazioni (PDF)</a>
+<a class="miniBtn primary" href="Infografica-Generale-eSpring.pdf" download>Prestazioni ufficiali eSpring • PDF</a>
+<a class="miniBtn secondary" href="prestazioni-espring.pdf" download>Certificazioni e analisi laboratorio • PDF </a>
         </div>
 
         <div class="certEnd">
