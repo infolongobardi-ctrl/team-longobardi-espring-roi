@@ -515,14 +515,18 @@
   const fmt2 = (n) => n.toLocaleString('it-IT', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   function beTextMonths(m){
-    if (m === null) return 'Oltre 20 anni';
-    m = Math.round(m);
-    const years = Math.floor(m / 12);
-    const months = m % 12;
-    if (years === 0) return `${months} mesi`;
-    if (months === 0) return `${years} anno${years > 1 ? 'i' : ''}`;
-    return `${years} anno${years > 1 ? 'i' : ''} e ${months} mesi`;
-  }
+  if (m === null) return 'Oltre 20 anni';
+  m = Math.round(m);
+
+  const years = Math.floor(m / 12);
+  const months = m % 12;
+
+  if (years === 0) return `${months} mesi`;
+  if (years === 1 && months === 0) return `1 anno`;
+  if (years > 1 && months === 0) return `${years} anni`;
+  if (years === 1) return `1 anno e ${months} mesi`;
+  return `${years} anni e ${months} mesi`;
+}
 
   function formatSavingsPercent(p){
     const abs = Math.abs(p).toLocaleString('it-IT', {maximumFractionDigits:1});
